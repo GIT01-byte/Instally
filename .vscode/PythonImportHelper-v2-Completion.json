@@ -1,11 +1,42 @@
 [
     {
-        "label": "os",
-        "kind": 6,
+        "label": "ConfigParser",
+        "importPath": "configparser",
+        "description": "configparser",
         "isExtraImport": true,
-        "importPath": "os",
-        "description": "os",
-        "detail": "os",
+        "detail": "configparser",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
         "documentation": {}
     },
     {
@@ -15,6 +46,15 @@
         "importPath": "sys",
         "description": "sys",
         "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
         "documentation": {}
     },
     {
@@ -36,11 +76,77 @@
         "documentation": {}
     },
     {
+        "label": "traceback",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "traceback",
+        "description": "traceback",
+        "detail": "traceback",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
         "label": "tkinter",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "tkinter",
         "description": "tkinter",
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
+        "label": "Label",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
+        "label": "ttk",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
+        "label": "Label",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
+        "label": "ttk",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
+        "label": "Label",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
+        "label": "ttk",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
         "detail": "tkinter",
         "documentation": {}
     },
@@ -85,6 +191,86 @@
         "documentation": {}
     },
     {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "importPath": "utils.logging",
+        "description": "utils.logging",
+        "isExtraImport": true,
+        "detail": "utils.logging",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "importPath": "utils.logging",
+        "description": "utils.logging",
+        "isExtraImport": true,
+        "detail": "utils.logging",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "importPath": "utils.logging",
+        "description": "utils.logging",
+        "isExtraImport": true,
+        "detail": "utils.logging",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "importPath": "utils.logging",
+        "description": "utils.logging",
+        "isExtraImport": true,
+        "detail": "utils.logging",
+        "documentation": {}
+    },
+    {
         "label": "shutil",
         "kind": 6,
         "isExtraImport": true,
@@ -94,73 +280,396 @@
         "documentation": {}
     },
     {
-        "label": "logging",
+        "label": "platform",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "logging",
-        "description": "logging",
-        "detail": "logging",
+        "importPath": "platform",
+        "description": "platform",
+        "detail": "platform",
         "documentation": {}
     },
     {
-        "label": "traceback",
+        "label": "loguru",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "traceback",
-        "description": "traceback",
-        "detail": "traceback",
+        "importPath": "loguru",
+        "description": "loguru",
+        "detail": "loguru",
         "documentation": {}
     },
     {
-        "label": "clear_choco_cache",
-        "importPath": "chocoEngine",
-        "description": "chocoEngine",
+        "label": "BASE_DIR",
+        "importPath": "core.config",
+        "description": "core.config",
         "isExtraImport": true,
-        "detail": "chocoEngine",
+        "detail": "core.config",
         "documentation": {}
     },
     {
-        "label": "run_choco_command",
-        "importPath": "chocoEngine",
-        "description": "chocoEngine",
+        "label": "ctypes",
+        "kind": 6,
         "isExtraImport": true,
-        "detail": "chocoEngine",
+        "importPath": "ctypes",
+        "description": "ctypes",
+        "detail": "ctypes",
         "documentation": {}
     },
     {
-        "label": "run_choco_command",
-        "kind": 2,
-        "importPath": "app.chocoEngine",
-        "description": "app.chocoEngine",
-        "peekOfCode": "def run_choco_command(\n    action: str,\n    log_widget: Label,\n    progress_bar: ttk.Progressbar,\n    packages: Optional[List[str]] = None,\n    choco_args: Optional[List[str]] = None,\n    thread_name: str = \"ChocoWorker\",\n) -> threading.Thread:\n    \"\"\"\n    Универсальный API-метод: собирает команду Chocolatey и запускает ее в изолированном фоне.",
-        "detail": "app.chocoEngine",
+        "label": "get_admin_permisions",
+        "importPath": "utils.os_handling",
+        "description": "utils.os_handling",
+        "isExtraImport": true,
+        "detail": "utils.os_handling",
         "documentation": {}
     },
     {
-        "label": "clear_choco_cache",
-        "kind": 2,
-        "importPath": "app.chocoEngine",
-        "description": "app.chocoEngine",
-        "peekOfCode": "def clear_choco_cache(dir_path: str | None = None):\n    choco_cache_path = dir_path if dir_path else _get_choco_cache_path()\n    if not choco_cache_path or not os.path.exists(choco_cache_path):\n        logging.info(\n            f\"[Cache Remover] Очистка не требуется: путь '{choco_cache_path}' не существует.\"\n        )\n        return\n    logging.info(\n        f\"[Cache Remover] Начало удаления кэша Chocolatey по пути: {choco_cache_path}\"\n    )",
-        "detail": "app.chocoEngine",
+        "label": "install",
+        "importPath": "service.installer",
+        "description": "service.installer",
+        "isExtraImport": true,
+        "detail": "service.installer",
         "documentation": {}
     },
     {
-        "label": "log_file_path",
+        "label": "CONFIG_PATH",
         "kind": 5,
-        "importPath": "app.chocoEngine",
-        "description": "app.chocoEngine",
-        "peekOfCode": "log_file_path = os.path.join(os.path.abspath(\".\"), \"app_debug.log\")\nlogging.basicConfig(\n    level=logging.INFO,\n    format=\"%(asctime)s [%(levelname)s] (%(threadName)s) %(message)s\",\n    handlers=[\n        logging.FileHandler(log_file_path, encoding=\"utf-8\", mode=\"a\"),\n        logging.StreamHandler(sys.stdout),  # Также дублируем логи в консоль для IDE\n    ],\n)\nlogging.info(\"=== Запуск нового сеанса менеджера пакетов ===\")",
-        "detail": "app.chocoEngine",
+        "importPath": "src.app.core.config",
+        "description": "src.app.core.config",
+        "peekOfCode": "CONFIG_PATH = BASE_DIR / \"src\" / \"config.ini\"\n# ---------------------------------------------------------------------------\n# Дефолтные значения (используются, если config.ini нет / битый / неполный)\n# ---------------------------------------------------------------------------\nDEFAULTS: dict[str, dict[str, str]] = {\n    \"App\": {\n        \"log_level\": \"INFO\",\n    },\n}\ndef _build_default_config() -> ConfigParser:",
+        "detail": "src.app.core.config",
+        "documentation": {}
+    },
+    {
+        "label": "config",
+        "kind": 5,
+        "importPath": "src.app.core.config",
+        "description": "src.app.core.config",
+        "peekOfCode": "config = _load_config()\n# ---------------------------------------------------------------------------\n# Публичные константы, использующиеся в других модулях\n# ---------------------------------------------------------------------------\nLOG_LEVEL = config.get(\"App\", \"log_level\", fallback=\"INFO\")",
+        "detail": "src.app.core.config",
+        "documentation": {}
+    },
+    {
+        "label": "LOG_LEVEL",
+        "kind": 5,
+        "importPath": "src.app.core.config",
+        "description": "src.app.core.config",
+        "peekOfCode": "LOG_LEVEL = config.get(\"App\", \"log_level\", fallback=\"INFO\")",
+        "detail": "src.app.core.config",
+        "documentation": {}
+    },
+    {
+        "label": "apt_install",
+        "kind": 2,
+        "importPath": "src.app.engines.aptEngine",
+        "description": "src.app.engines.aptEngine",
+        "peekOfCode": "def apt_install(\n    action: str,\n    ttk_log_widget: Label,\n    ttk_progress_bar: ttk.Progressbar,\n    packages: Optional[List[str]] = None,\n    apt_args: Optional[List[str]] = None,\n    thread_name: str = \"AptWorker\",\n) -> threading.Thread:\n    \"\"\"\n    Универсальный API-метод: запускает команды apt ПООЧЕРЁДНО для каждого пакета.",
+        "detail": "src.app.engines.aptEngine",
+        "documentation": {}
+    },
+    {
+        "label": "clear_apt_cache",
+        "kind": 2,
+        "importPath": "src.app.engines.aptEngine",
+        "description": "src.app.engines.aptEngine",
+        "peekOfCode": "def clear_apt_cache(dir_path: str | None = None):\n    \"\"\"\n    Чистит кэш скачанных .deb-пакетов.\n    Требует прав root — обычно приложение уже запущено под sudo.\n    \"\"\"\n    apt_cache_path = Path(dir_path) if dir_path else APT_CACHE_DIR\n    if not apt_cache_path.exists():\n        logger.info(\n            f\"[Cache Remover] Очистка не требуется: \"\n            f\"путь '{apt_cache_path}' не существует.\"",
+        "detail": "src.app.engines.aptEngine",
+        "documentation": {}
+    },
+    {
+        "label": "APT_EXE",
+        "kind": 5,
+        "importPath": "src.app.engines.aptEngine",
+        "description": "src.app.engines.aptEngine",
+        "peekOfCode": "APT_EXE = \"/usr/bin/apt-get\"\nAPT_CACHE_DIR = Path(\"/var/cache/apt/archives\")\n# ---------------------------------------------------------------------------\n# Кодировка вывода apt — на Linux всегда UTF-8\n# ---------------------------------------------------------------------------\ndef _get_console_encoding() -> str:\n    return \"utf-8\"\n# ---------------------------------------------------------------------------\n# Ядро: запуск одной команды apt для ОДНОГО пакета\n# ---------------------------------------------------------------------------",
+        "detail": "src.app.engines.aptEngine",
+        "documentation": {}
+    },
+    {
+        "label": "APT_CACHE_DIR",
+        "kind": 5,
+        "importPath": "src.app.engines.aptEngine",
+        "description": "src.app.engines.aptEngine",
+        "peekOfCode": "APT_CACHE_DIR = Path(\"/var/cache/apt/archives\")\n# ---------------------------------------------------------------------------\n# Кодировка вывода apt — на Linux всегда UTF-8\n# ---------------------------------------------------------------------------\ndef _get_console_encoding() -> str:\n    return \"utf-8\"\n# ---------------------------------------------------------------------------\n# Ядро: запуск одной команды apt для ОДНОГО пакета\n# ---------------------------------------------------------------------------\ndef _run_apt_with_logs(",
+        "detail": "src.app.engines.aptEngine",
+        "documentation": {}
+    },
+    {
+        "label": "ensure_choco",
+        "kind": 2,
+        "importPath": "src.app.engines.chocoEngine",
+        "description": "src.app.engines.chocoEngine",
+        "peekOfCode": "def ensure_choco() -> str:\n    \"\"\"\n    Возвращает путь к системному choco.exe.\n    Порядок: кэш -> PATH -> ProgramData -> установка через PowerShell.\n    \"\"\"\n    global _CHOCO_EXE_CACHE\n    if _CHOCO_EXE_CACHE:\n        return _CHOCO_EXE_CACHE\n    choco = _find_system_choco()\n    if choco:",
+        "detail": "src.app.engines.chocoEngine",
+        "documentation": {}
+    },
+    {
+        "label": "choco_install",
+        "kind": 2,
+        "importPath": "src.app.engines.chocoEngine",
+        "description": "src.app.engines.chocoEngine",
+        "peekOfCode": "def choco_install(\n    action: str,\n    ttk_log_widget: Label,\n    ttk_progress_bar: ttk.Progressbar,\n    packages: Optional[List[str]] = None,\n    choco_args: Optional[List[str]] = None,\n    thread_name: str = \"ChocoWorker\",\n) -> threading.Thread:\n    \"\"\"Запускает команды Chocolatey ПООЧЕРЁДНО для каждого пакета.\"\"\"\n    packages_list = list(packages) if packages else []",
+        "detail": "src.app.engines.chocoEngine",
+        "documentation": {}
+    },
+    {
+        "label": "clear_choco_cache",
+        "kind": 2,
+        "importPath": "src.app.engines.chocoEngine",
+        "description": "src.app.engines.chocoEngine",
+        "peekOfCode": "def clear_choco_cache():\n    \"\"\"\n    Чистит кэш системного Chocolatey штатной командой choco cache remove.\n    \"\"\"\n    try:\n        choco_exe = ensure_choco()\n    except Exception as e:\n        logger.error(f\"[Cache Remover] Chocolatey недоступен: {e}\")\n        return\n    logger.info(\"[Cache Remover] Очистка кэша Chocolatey...\")",
+        "detail": "src.app.engines.chocoEngine",
+        "documentation": {}
+    },
+    {
+        "label": "dnf_install",
+        "kind": 2,
+        "importPath": "src.app.engines.dnfEngine",
+        "description": "src.app.engines.dnfEngine",
+        "peekOfCode": "def dnf_install(\n    action: str,\n    ttk_log_widget: Label,\n    ttk_progress_bar: ttk.Progressbar,\n    packages: Optional[List[str]] = None,\n    dnf_args: Optional[List[str]] = None,\n    thread_name: str = \"DnfWorker\",\n) -> threading.Thread:\n    \"\"\"\n    Универсальный API: запускает dnf ПООЧЕРЁДНО для каждого пакета.",
+        "detail": "src.app.engines.dnfEngine",
+        "documentation": {}
+    },
+    {
+        "label": "clear_dnf_cache",
+        "kind": 2,
+        "importPath": "src.app.engines.dnfEngine",
+        "description": "src.app.engines.dnfEngine",
+        "peekOfCode": "def clear_dnf_cache(dir_path: str | None = None):\n    \"\"\"\n    Чистит кэш dnf штатной командой dnf clean all.\n    \"\"\"\n    if not os.path.exists(DNF_EXE):\n        logger.info(f\"[Cache Remover] dnf не найден: {DNF_EXE}. Пропускаю.\")\n        return\n    logger.info(\"[Cache Remover] Начало очистки кэша DNF...\")\n    try:\n        result = subprocess.run(",
+        "detail": "src.app.engines.dnfEngine",
+        "documentation": {}
+    },
+    {
+        "label": "DNF_EXE",
+        "kind": 5,
+        "importPath": "src.app.engines.dnfEngine",
+        "description": "src.app.engines.dnfEngine",
+        "peekOfCode": "DNF_EXE = \"/usr/bin/dnf\"\nDNF_CACHE_DIR = Path(\"/var/cache/dnf\")\ndef _get_console_encoding() -> str:\n    return \"utf-8\"\ndef _run_dnf_with_logs(\n    command_args: list[str],\n    ttk_log_widget: Label,\n    ttk_progress_bar: ttk.Progressbar,\n    package_label: str = \"\",\n    package_index: int = 1,",
+        "detail": "src.app.engines.dnfEngine",
+        "documentation": {}
+    },
+    {
+        "label": "DNF_CACHE_DIR",
+        "kind": 5,
+        "importPath": "src.app.engines.dnfEngine",
+        "description": "src.app.engines.dnfEngine",
+        "peekOfCode": "DNF_CACHE_DIR = Path(\"/var/cache/dnf\")\ndef _get_console_encoding() -> str:\n    return \"utf-8\"\ndef _run_dnf_with_logs(\n    command_args: list[str],\n    ttk_log_widget: Label,\n    ttk_progress_bar: ttk.Progressbar,\n    package_label: str = \"\",\n    package_index: int = 1,\n    package_total: int = 1,",
+        "detail": "src.app.engines.dnfEngine",
+        "documentation": {}
+    },
+    {
+        "label": "install",
+        "kind": 2,
+        "importPath": "src.app.service.installer",
+        "description": "src.app.service.installer",
+        "peekOfCode": "def install(\n    action: str,\n    ttk_log_widget: Label,\n    ttk_progress_bar: ttk.Progressbar,\n    packages: Optional[List[str]] = None,\n    args: Optional[List[str]] = None,\n):\n    \"\"\"\n    Универсальная точка входа. Сама выбирает движок по текущей ОС.\n    action: 'install' | 'upgrade'",
+        "detail": "src.app.service.installer",
+        "documentation": {}
+    },
+    {
+        "label": "clear_cache",
+        "kind": 2,
+        "importPath": "src.app.service.installer",
+        "description": "src.app.service.installer",
+        "peekOfCode": "def clear_cache():\n    \"\"\"Универсальная очистка кэша выбранного движка.\"\"\"\n    engine = _detect_engine()\n    if engine == \"choco\":\n        from engines.chocoEngine import clear_choco_cache\n        return clear_choco_cache()\n    if engine == \"apt\":\n        from engines.aptEngine import clear_apt_cache\n        return clear_apt_cache()\n    if engine == \"dnf\":",
+        "detail": "src.app.service.installer",
+        "documentation": {}
+    },
+    {
+        "label": "LOGS_DIR",
+        "kind": 5,
+        "importPath": "src.app.utils.logging",
+        "description": "src.app.utils.logging",
+        "peekOfCode": "LOGS_DIR = BASE_DIR / \"logs\"\nLOGS_DIR.mkdir(parents=True, exist_ok=True)\nlogger = loguru.logger\nlogger.remove()\n# Консоль — с цветом и кратким форматом\nif sys.stderr is not None:\n    logger.add(\n        sys.stderr,\n        format=\"<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>\",\n        level=\"DEBUG\",",
+        "detail": "src.app.utils.logging",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "src.app.utils.logging",
+        "description": "src.app.utils.logging",
+        "peekOfCode": "logger = loguru.logger\nlogger.remove()\n# Консоль — с цветом и кратким форматом\nif sys.stderr is not None:\n    logger.add(\n        sys.stderr,\n        format=\"<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>\",\n        level=\"DEBUG\",\n        colorize=True,\n    )",
+        "detail": "src.app.utils.logging",
+        "documentation": {}
+    },
+    {
+        "label": "get_admin_permisions",
+        "kind": 2,
+        "importPath": "src.app.utils.os_handling",
+        "description": "src.app.utils.os_handling",
+        "peekOfCode": "def get_admin_permisions() -> None:\n    \"\"\"\n    Гарантирует, что приложение запущено с правами администратора.\n    Windows — UAC, Linux/macOS — root.\n    На Windows при недостатке прав перезапускает приложение и завершает текущий процесс.\n    \"\"\"\n    system = platform.system().lower()\n    if system == \"windows\":\n        if _is_admin_windows():\n            logger.info(\"[WINDOWS] Программа уже запущена с правами администратора\")",
+        "detail": "src.app.utils.os_handling",
         "documentation": {}
     },
     {
         "label": "start",
         "kind": 2,
-        "importPath": "app.main",
-        "description": "app.main",
-        "peekOfCode": "def start():\n    clear_choco_cache()  # Очищаем кеш Choco\n    root = tk.Tk()\n    root.title(\"Программа для установки программ\")\n    root.geometry(\"900x355\")\n    root.eval(\"tk::PlaceWindow . center\")\n    root.resizable(True, True)\n    # Переводим окно в режим Fullscreen\n    root.attributes(\"-fullscreen\", True)\n    def close_app():",
-        "detail": "app.main",
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "def start():\n    get_admin_permisions()\n    root = tk.Tk()\n    root.title(APP_NAME)\n    root.geometry(\"1120x680\")\n    root.minsize(900, 560)\n    root.configure(bg=BG_ROOT)\n    root.eval(\"tk::PlaceWindow . center\")\n    _setup_styles()\n    # ----------------------------------------------------------",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "APP_NAME",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "APP_NAME = \"Instally\"\nAPP_TAGLINE = \"Избавляет вас от рутины установки программ\"\n# ==============================================================\n#                    ЦВЕТОВАЯ СХЕМА (Dracula-ish)\n# ==============================================================\nBG_ROOT = \"#1e1f29\"  # фон окна\nBG_PANEL = \"#282a36\"  # панели, нижний бар\nBG_CARD = \"#2f313e\"  # карточки\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "APP_TAGLINE",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "APP_TAGLINE = \"Избавляет вас от рутины установки программ\"\n# ==============================================================\n#                    ЦВЕТОВАЯ СХЕМА (Dracula-ish)\n# ==============================================================\nBG_ROOT = \"#1e1f29\"  # фон окна\nBG_PANEL = \"#282a36\"  # панели, нижний бар\nBG_CARD = \"#2f313e\"  # карточки\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "BG_ROOT",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "BG_ROOT = \"#1e1f29\"  # фон окна\nBG_PANEL = \"#282a36\"  # панели, нижний бар\nBG_CARD = \"#2f313e\"  # карточки\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "BG_PANEL",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "BG_PANEL = \"#282a36\"  # панели, нижний бар\nBG_CARD = \"#2f313e\"  # карточки\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "BG_CARD",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "BG_CARD = \"#2f313e\"  # карточки\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "BG_CARD_HOVER",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "BG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "BG_INPUT",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "BG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "FG_TITLE",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "FG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "FG_TEXT",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "FG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "FG_MUTED",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "FG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "FG_DIM",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "FG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "ACCENT",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "ACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "ACCENT_HOVER",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "ACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================\ndef _make_scrollable(parent: tk.Widget) -> tk.Frame:",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "ACCENT_DARK",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "ACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================\ndef _make_scrollable(parent: tk.Widget) -> tk.Frame:\n    \"\"\"Canvas + Scrollbar + возвращает вложенный Frame для карточек.\"\"\"",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "SUCCESS",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "SUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================\ndef _make_scrollable(parent: tk.Widget) -> tk.Frame:\n    \"\"\"Canvas + Scrollbar + возвращает вложенный Frame для карточек.\"\"\"\n    container = tk.Frame(parent, bg=BG_ROOT)",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "DANGER",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "DANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================\ndef _make_scrollable(parent: tk.Widget) -> tk.Frame:\n    \"\"\"Canvas + Scrollbar + возвращает вложенный Frame для карточек.\"\"\"\n    container = tk.Frame(parent, bg=BG_ROOT)\n    container.pack(fill=\"both\", expand=True)",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "DANGER_HOVER",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "DANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================\ndef _make_scrollable(parent: tk.Widget) -> tk.Frame:\n    \"\"\"Canvas + Scrollbar + возвращает вложенный Frame для карточек.\"\"\"\n    container = tk.Frame(parent, bg=BG_ROOT)\n    container.pack(fill=\"both\", expand=True)\n    canvas = tk.Canvas(container, bg=BG_ROOT, highlightthickness=0, bd=0)",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "BORDER",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "BORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================\ndef _make_scrollable(parent: tk.Widget) -> tk.Frame:\n    \"\"\"Canvas + Scrollbar + возвращает вложенный Frame для карточек.\"\"\"\n    container = tk.Frame(parent, bg=BG_ROOT)\n    container.pack(fill=\"both\", expand=True)\n    canvas = tk.Canvas(container, bg=BG_ROOT, highlightthickness=0, bd=0)\n    scrollbar = ttk.Scrollbar(container, orient=\"vertical\", command=canvas.yview)",
+        "detail": "src.app.main",
         "documentation": {}
     },
     {

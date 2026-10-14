@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<fileSnapshot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <files>
-    <file path="C:\Programming\Projects\SISADMIN_PROGRAMM\app\choco_files\lib\GoogleChrome\GoogleChrome.nupkg" checksum="8C0AC9ECB6D99068877F7190B79C5AD2" />
-    <file path="C:\Programming\Projects\SISADMIN_PROGRAMM\app\choco_files\lib\GoogleChrome\googlechrome.nuspec" checksum="C22522CA39C7A31C8442B8B54830D146" />
-    <file path="C:\Programming\Projects\SISADMIN_PROGRAMM\app\choco_files\lib\GoogleChrome\tools\chocolateyInstall.ps1" checksum="D903E1E55B1EDE2145BB07ACCC40EE58" />
-    <file path="C:\Programming\Projects\SISADMIN_PROGRAMM\app\choco_files\lib\GoogleChrome\tools\helpers.ps1" checksum="2ABBC7E4384A2837486A47E0378C6CCB" />
-  </files>
-</fileSnapshot>

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Type="http://schemas.microsoft.com/packaging/2010/07/manifest" Target="/chocolatey.nuspec" Id="R11FDAE5EE58C427A" />
-  <Relationship Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="/package/services/metadata/core-properties/25726e8c50354e6cbc767ad31e8d1cae.psmdcp" Id="R9CAF82FB2D93E2EE" />
-</Relationships>
