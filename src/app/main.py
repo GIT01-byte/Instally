@@ -13,9 +13,9 @@ APP_TAGLINE = "Избавляет вас от рутины установки п
 # ==============================================================
 #                    ЦВЕТОВАЯ СХЕМА (Dracula-ish)
 # ==============================================================
-BG_ROOT = "#1e1f29"  # фон окна
-BG_PANEL = "#282a36"  # панели, нижний бар
-BG_CARD = "#2f313e"  # карточки
+BG_ROOT = "#1e1f29"
+BG_PANEL = "#282a36"
+BG_CARD = "#2f313e"
 BG_CARD_HOVER = "#383a4a"
 BG_INPUT = "#21222c"
 
@@ -24,7 +24,7 @@ FG_TEXT = "#d7d7e0"
 FG_MUTED = "#8b8d9a"
 FG_DIM = "#5f6170"
 
-ACCENT = "#bd93f9"  # основной акцент (фиолет)
+ACCENT = "#bd93f9"
 ACCENT_HOVER = "#caa9fa"
 ACCENT_DARK = "#8a5cf6"
 
@@ -33,6 +33,148 @@ DANGER = "#ff5555"
 DANGER_HOVER = "#ff6e6e"
 BORDER = "#3a3c4a"
 
+
+# ==============================================================
+#                    ДАННЫЕ: КАТЕГОРИИ
+# ==============================================================
+CATEGORIES = [
+    {"title": "Базовый софт", "desc": "7-Zip, VLC, Chrome, Firefox",
+     "packages": ["7zip", "vlc", "googlechrome", "firefox"], "action": "install"},
+    {"title": "Для разработчика", "desc": "Git, VS Code, Python, DBeaver",
+     "packages": ["git", "vscode", "python", "dbeaver"], "action": "install"},
+    {"title": "Сисадмину", "desc": "Sysinternals, MobaXterm, WinSCP, PuTTY",
+     "packages": ["sysinternals", "mobaxterm", "winscp", "putty"], "action": "install"},
+    {"title": "Офисный пакет", "desc": "LibreOffice, Adobe Reader, 7-Zip",
+     "packages": ["libreoffice-fresh", "adobereader", "7zip"], "action": "install"},
+    {"title": "Мультимедиа", "desc": "VLC, GIMP, Inkscape, Audacity, OBS",
+     "packages": ["vlc", "gimp", "inkscape", "audacity", "obs-studio"], "action": "install"},
+    {"title": "Графика и 3D", "desc": "GIMP, Inkscape, Blender",
+     "packages": ["gimp", "inkscape", "blender"], "action": "install"},
+    {"title": "Браузеры", "desc": "Firefox, Opera, Edge, Chrome",
+     "packages": ["firefox", "opera", "microsoft-edge", "googlechrome"], "action": "install"},
+    {"title": "Для преподавания", "desc": "Scratch, Thonny, GeoGebra, Maxima",
+     "packages": ["scratch", "thonny", "geogebra", "maxima"], "action": "install"},
+    {"title": "Диагностика системы", "desc": "CPU-Z, GPU-Z, HWMonitor, Speccy",
+     "packages": ["cpu-z", "gpu-z", "hwmonitor", "speccy"], "action": "install"},
+    {"title": "Виртуализация", "desc": "VirtualBox, Docker Desktop, GNS3",
+     "packages": ["virtualbox", "docker-desktop", "gns3"], "action": "install"},
+    {"title": "Обновление системы", "desc": "Обновить все установленные программы",
+     "packages": ["all"], "action": "upgrade", "button_text": "Обновить"},
+]
+
+
+# ==============================================================
+#                    ДАННЫЕ: МАРКЕТПЛЕЙС (группы)
+# ==============================================================
+MARKETPLACE_GROUPS = [
+    ("🛠  Администрирование и мониторинг", [
+        ("PowerShell 7",        "Современная оболочка и язык сценариев",   "powershell-core"),
+        ("Sysinternals Suite",  "Набор утилит Microsoft для диагностики",  "sysinternals"),
+        ("Process Explorer",    "Расширенный диспетчер задач",             "procexp"),
+        ("PsTools",             "Консольные утилиты Sysinternals",         "pstools"),
+        ("MobaXterm",           "SSH/RDP/VNC-терминал",                    "mobaxterm"),
+        ("WinSCP",              "SFTP/SCP/FTP-клиент",                     "winscp"),
+        ("PuTTY",               "Классический SSH/Telnet-клиент",          "putty"),
+        ("Windows Admin Center","Веб-панель управления серверами",         "windows-admin-center"),
+        ("Zabbix Agent",        "Агент системы мониторинга Zabbix",        "zabbix-agent"),
+    ]),
+
+    ("💻 Разработка", [
+        ("Python 3",            "Интерпретатор Python",                    "python"),
+        ("Git",                 "Система контроля версий",                 "git"),
+        ("VS Code",             "Редактор кода от Microsoft",              "vscode"),
+        ("Visual Studio 2022",  "IDE для .NET, C++, C#",                   "visualstudio2022community"),
+        ("IntelliJ IDEA CE",    "IDE для Java и JVM-языков",               "intellijidea-community"),
+        ("PyCharm CE",          "IDE для Python",                          "pycharm-community"),
+        ("Code::Blocks",        "IDE для C/C++",                           "codeblocks"),
+        ("Qt Creator",          "IDE для C++/Qt",                          "qtcreator"),
+        ("Android Studio",      "IDE для Android-разработки",              "androidstudio"),
+        ("DBeaver",             "Универсальный клиент БД",                 "dbeaver"),
+        ("MySQL",               "СУБД MySQL",                              "mysql"),
+        ("MariaDB",             "СУБД MariaDB",                            "mariadb"),
+        ("Nginx",               "Веб-сервер и reverse-proxy",              "nginx"),
+        ("Docker Desktop",      "Контейнеризация",                         "docker-desktop"),
+        ("VirtualBox",          "Виртуальные машины",                      "virtualbox"),
+        ("GNS3",                "Симулятор сетей",                         "gns3"),
+    ]),
+
+    ("📄 Офис и документы", [
+        ("LibreOffice",         "Свободный офисный пакет",                 "libreoffice-fresh"),
+        ("Adobe Reader",        "Просмотр PDF",                            "adobereader"),
+        ("Notepad++",           "Продвинутый текстовый редактор",          "notepadplusplus"),
+        ("7-Zip",               "Архиватор",                               "7zip"),
+        ("WinRAR",              "Архиватор RAR/ZIP",                       "winrar"),
+        ("Everything",          "Мгновенный поиск файлов",                 "everything"),
+    ]),
+
+    ("🎨 Мультимедиа и графика", [
+        ("VLC",                 "Медиаплеер для всех форматов",            "vlc"),
+        ("Spotify",             "Музыкальный стриминг",                    "spotify"),
+        ("Audacity",            "Аудиоредактор",                           "audacity"),
+        ("OBS Studio",          "Запись и стриминг экрана",                "obs-studio"),
+        ("GIMP",                "Растровый графический редактор",          "gimp"),
+        ("Inkscape",            "Векторный графический редактор",          "inkscape"),
+        ("Blender",             "3D-моделирование и анимация",             "blender"),
+    ]),
+
+    ("🎓 Образование", [
+        ("Scratch",             "Визуальное программирование",             "scratch"),
+        ("Thonny",              "Python-IDE для начинающих",               "thonny"),
+        ("GeoGebra",            "Математическая визуализация",             "geogebra"),
+        ("Maxima",              "Система компьютерной алгебры",            "maxima"),
+        ("RustDesk",            "Удалённое управление компьютером",        "rustdesk"),
+    ]),
+
+    ("🔍 Диагностика и браузеры", [
+        ("CPU-Z",               "Информация о CPU и памяти",               "cpu-z"),
+        ("GPU-Z",               "Информация о видеокарте",                 "gpu-z"),
+        ("HWMonitor",           "Температуры и вольтажи",                  "hwmonitor"),
+        ("Speccy",              "Подробная информация о железе",           "speccy"),
+        ("Chrome",              "Браузер Google Chrome",                   "googlechrome"),
+        ("Firefox",             "Браузер Mozilla Firefox",                 "firefox"),
+        ("Opera",               "Браузер Opera",                           "opera"),
+        ("Edge",                "Браузер Microsoft Edge",                  "microsoft-edge"),
+        ("qBittorrent",         "Торрент-клиент",                          "qbittorrent"),
+    ]),
+]
+
+# ==============================================================
+#                    НАСТРОЙКИ CHOCO
+# ==============================================================
+CHOCO_CACHE_DIR = r"C:\ChocolateyCache"
+
+
+def _configure_choco_cache():
+    """Устанавливает папку кэша Chocolatey. Требует прав администратора."""
+    import subprocess
+    import os
+    import sys
+
+    CREATE_NO_WINDOW = 0x08000000 if sys.platform == "win32" else 0
+
+    try:
+        os.makedirs(CHOCO_CACHE_DIR, exist_ok=True)
+    except OSError:
+        pass  # если не удалось создать — choco ругнётся сам
+
+    choco_path = r"C:\ProgramData\chocolatey\bin\choco.exe"
+    if not os.path.exists(choco_path):
+        choco_path = "choco"  # fallback на PATH
+
+    cmd = [choco_path, "config", "set", "cacheLocation", CHOCO_CACHE_DIR]
+
+    try:
+        subprocess.run(
+            cmd,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            stdin=subprocess.DEVNULL,
+            creationflags=CREATE_NO_WINDOW,
+            shell=False,
+            timeout=15,
+        )
+    except Exception:
+        pass  # тихо игнорируем — не критично для работы UI
 
 # ==============================================================
 #                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
@@ -56,7 +198,6 @@ def _make_scrollable(parent: tk.Widget) -> tk.Frame:
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
 
-    # Растягиваем inner по ширине canvas
     def _on_canvas_configure(event):
         canvas.itemconfigure(window_id, width=event.width)
 
@@ -93,7 +234,6 @@ def _make_card(
     )
     card.grid(row=row, column=col, padx=8, pady=8, sticky="nsew")
 
-    # Верхняя строка: заголовок
     header = tk.Frame(card, bg=BG_CARD)
     header.pack(fill="x")
 
@@ -106,7 +246,6 @@ def _make_card(
         anchor="w",
     ).pack(side="left")
 
-    # Описание
     tk.Label(
         card,
         text=desc,
@@ -118,7 +257,6 @@ def _make_card(
         anchor="w",
     ).pack(fill="x", pady=(6, 14))
 
-    # Кнопка
     pkg_list = packages if packages is not None else ([package] if package else [])
     args = ["-y"] if action == "install" else []
 
@@ -135,7 +273,6 @@ def _make_card(
         ),
     ).pack(fill="x")
 
-    # Плавный ховер всей карточки
     def on_enter(_):
         card.configure(bg=BG_CARD_HOVER)
         for w in (card, header):
@@ -156,6 +293,38 @@ def _make_card(
     return card
 
 
+def _make_section(parent, title, apps, status_label, progress_bar, columns=4):
+    """Секция с заголовком и сеткой карточек."""
+    header = tk.Frame(parent, bg=BG_ROOT)
+    header.pack(fill="x", pady=(20, 4), padx=6)
+    tk.Label(
+        header, text=title,
+        font=("Segoe UI Semibold", 13),
+        bg=BG_ROOT, fg=ACCENT, anchor="w",
+    ).pack(side="left")
+    tk.Label(
+        header, text=f"  {len(apps)} шт.",
+        font=("Segoe UI", 9),
+        bg=BG_ROOT, fg=FG_DIM, anchor="w",
+    ).pack(side="left", pady=(4, 0))
+
+    tk.Frame(parent, bg=BORDER, height=1).pack(fill="x", padx=6, pady=(0, 10))
+
+    grid = tk.Frame(parent, bg=BG_ROOT)
+    grid.pack(fill="x", padx=2)
+
+    for i, (t, d, pkg) in enumerate(apps):
+        r, c = divmod(i, columns)
+        _make_card(
+            parent=grid, row=r, col=c,
+            title=t, desc=d, package=pkg,
+            status_label=status_label, progress_bar=progress_bar,
+        )
+
+    for i in range(columns):
+        grid.columnconfigure(i, weight=1, uniform=f"sect{title}")
+
+
 # ==============================================================
 #                    СТИЛИЗАЦИЯ ttk
 # ==============================================================
@@ -163,7 +332,6 @@ def _setup_styles():
     style = ttk.Style()
     style.theme_use("clam")
 
-    # --- Notebook ---
     style.configure(
         "TNotebook", background=BG_ROOT, borderwidth=0, tabmargins=(8, 6, 8, 0)
     )
@@ -182,13 +350,11 @@ def _setup_styles():
         expand=[("selected", (0, 0, 0, 0))],
     )
 
-    # --- Frame / Label ---
     style.configure("TFrame", background=BG_ROOT)
     style.configure(
         "TLabel", background=BG_ROOT, foreground=FG_TEXT, font=("Segoe UI", 10)
     )
 
-    # --- Обычная кнопка ---
     style.configure(
         "TButton",
         background=BG_CARD,
@@ -204,7 +370,6 @@ def _setup_styles():
         foreground=[("active", FG_TITLE)],
     )
 
-    # --- Акцентная кнопка ---
     style.configure(
         "Accent.TButton",
         background=ACCENT_DARK,
@@ -220,7 +385,6 @@ def _setup_styles():
         foreground=[("active", "#ffffff")],
     )
 
-    # --- Danger-кнопка (Закрыть) ---
     style.configure(
         "Danger.TButton",
         background=BG_CARD,
@@ -236,7 +400,6 @@ def _setup_styles():
         foreground=[("active", DANGER_HOVER)],
     )
 
-    # --- Прогрессбар ---
     style.configure(
         "Accent.Horizontal.TProgressbar",
         troughcolor=BG_INPUT,
@@ -247,7 +410,6 @@ def _setup_styles():
         thickness=8,
     )
 
-    # --- Скроллбар ---
     style.configure(
         "Vertical.TScrollbar",
         background=BG_PANEL,
@@ -267,6 +429,7 @@ def _setup_styles():
 # ==============================================================
 def start():
     get_admin_permisions()
+    _configure_choco_cache()
 
     root = tk.Tk()
     root.title(APP_NAME)
@@ -277,94 +440,66 @@ def start():
 
     _setup_styles()
 
-    # ----------------------------------------------------------
-    # ВЕРХНЯЯ ПАНЕЛЬ
-    # ----------------------------------------------------------
+    # --- ВЕРХНЯЯ ПАНЕЛЬ ---
     top_frame = tk.Frame(root, bg=BG_ROOT)
     top_frame.pack(fill="x", padx=28, pady=(20, 6))
 
-    logo = tk.Label(
-        top_frame,
-        text="◆",
+    tk.Label(
+        top_frame, text="◆",
         font=("Segoe UI", 22, "bold"),
-        bg=BG_ROOT,
-        fg=ACCENT,
-    )
-    logo.pack(side="left")
+        bg=BG_ROOT, fg=ACCENT,
+    ).pack(side="left")
 
     title_block = tk.Frame(top_frame, bg=BG_ROOT)
     title_block.pack(side="left", padx=(10, 0))
 
     tk.Label(
-        title_block,
-        text=APP_NAME,
+        title_block, text=APP_NAME,
         font=("Segoe UI Semibold", 18),
-        bg=BG_ROOT,
-        fg=FG_TITLE,
-        anchor="w",
+        bg=BG_ROOT, fg=FG_TITLE, anchor="w",
     ).pack(anchor="w")
     tk.Label(
-        title_block,
-        text=APP_TAGLINE,
+        title_block, text=APP_TAGLINE,
         font=("Segoe UI", 9),
-        bg=BG_ROOT,
-        fg=FG_MUTED,
-        anchor="w",
+        bg=BG_ROOT, fg=FG_MUTED, anchor="w",
     ).pack(anchor="w")
 
-    # Бейдж «Администратор»
-    badge = tk.Label(
-        top_frame,
-        text="  ADMIN  ",
+    tk.Label(
+        top_frame, text="  ADMIN  ",
         font=("Segoe UI Semibold", 8),
-        bg=BG_CARD,
-        fg=ACCENT,
-        padx=6,
-        pady=4,
-    )
-    badge.pack(side="right", pady=8)
+        bg=BG_CARD, fg=ACCENT, padx=6, pady=4,
+    ).pack(side="right", pady=8)
 
-    # Разделитель
     tk.Frame(root, bg=BORDER, height=1).pack(fill="x", padx=28, pady=(6, 0))
 
-    # ----------------------------------------------------------
-    # НИЖНЯЯ ПАНЕЛЬ (создаём заранее, pack() — в самом конце)
-    # ----------------------------------------------------------
+    # --- НИЖНЯЯ ПАНЕЛЬ (создаём заранее) ---
     bottom_frame = tk.Frame(root, bg=BG_PANEL)
 
     status_container = tk.Frame(bottom_frame, bg=BG_PANEL)
     status_container.pack(fill="x", padx=24, pady=(12, 0))
 
     tk.Label(
-        status_container,
-        text="СТАТУС",
+        status_container, text="СТАТУС",
         font=("Segoe UI Semibold", 8),
-        bg=BG_PANEL,
-        fg=FG_DIM,
+        bg=BG_PANEL, fg=FG_DIM,
     ).pack(anchor="w")
 
     status_label = tk.Label(
         status_container,
         text="Система готова. Выберите действие.",
         font=("Consolas", 10),
-        bg=BG_PANEL,
-        fg=FG_TEXT,
-        anchor="w",
-        justify="left",
+        bg=BG_PANEL, fg=FG_TEXT,
+        anchor="w", justify="left",
     )
     status_label.pack(fill="x", pady=(2, 8))
 
     progress_bar = ttk.Progressbar(
-        bottom_frame,
-        orient="horizontal",
-        mode="determinate",
-        style="Accent.Horizontal.TProgressbar",
+        bottom_frame, orient="horizontal",
+        mode="determinate", style="Accent.Horizontal.TProgressbar",
     )
     progress_bar.pack(fill="x", padx=24, pady=(0, 10))
 
-    # ----------------------------------------------------------
-    # NOTEBOOK
-    # ----------------------------------------------------------
+    # --- NOTEBOOK ---
     notebook = ttk.Notebook(root)
     notebook.pack(fill="both", expand=True, padx=22, pady=(14, 6))
 
@@ -375,48 +510,8 @@ def start():
     notebook.add(tab_install, text="  Категории  ")
     scrollable_frame = _make_scrollable(tab_install)
 
-    categories = [
-        {
-            "title": "Базовый софт",
-            "desc": "7-Zip, VLC, Chrome",
-            "packages": ["7zip", "vlc", "googlechrome"],
-            "action": "install",
-        },
-        {
-            "title": "Для разработчика",
-            "desc": "Git, VS Code, Python",
-            "packages": ["git", "vscode", "python"],
-            "action": "install",
-        },
-        {
-            "title": "Обновление системы",
-            "desc": "Обновить все установленные программы",
-            "packages": ["all"],
-            "action": "upgrade",
-            "button_text": "Обновить",
-        },
-        {
-            "title": "Браузеры",
-            "desc": "Firefox, Opera, Edge",
-            "packages": ["firefox", "opera", "microsoft-edge"],
-            "action": "install",
-        },
-        {
-            "title": "Мультимедиа",
-            "desc": "Spotify, Audacity, GIMP",
-            "packages": ["spotify", "audacity", "gimp"],
-            "action": "install",
-        },
-        {
-            "title": "Утилиты",
-            "desc": "Полезные инструменты системы",
-            "packages": ["7zip", "everything", "notepadplusplus"],
-            "action": "install",
-        },
-    ]
-
     row, col = 0, 0
-    for cat in categories:
+    for cat in CATEGORIES:
         _make_card(
             parent=scrollable_frame,
             row=row,
@@ -444,57 +539,25 @@ def start():
     notebook.add(tab_market, text="  Маркетплейс  ")
     market_frame = _make_scrollable(tab_market)
 
-    apps = [
-        ("CPU-Z", "Информация о процессоре, памяти, плате", "cpu-z"),
-        ("GPU-Z", "Мониторинг видеокарты и её параметров", "gpu-z"),
-        ("HWMonitor", "Температуры, вольтажи, вентиляторы", "hwmonitor"),
-        ("Speccy", "Подробная информация о железе", "speccy"),
-        ("Notepad++", "Продвинутый текстовый редактор", "notepadplusplus"),
-        ("WinRAR", "Архиватор RAR / ZIP", "winrar"),
-        ("Everything", "Мгновенный поиск файлов по имени", "everything"),
-        ("Process Explorer", "Расширенный диспетчер задач", "procexp"),
-        ("Chrome", "Браузер Google Chrome", "googlechrome"),
-        ("Firefox", "Браузер Mozilla Firefox", "firefox"),
-        ("VLC", "Медиаплеер для большинства форматов", "vlc"),
-        ("qBittorrent", "Лёгкий торрент-клиент", "qbittorrent"),
-    ]
-
-    row, col = 0, 0
-    for title, desc, pkg in apps:
-        _make_card(
+    for group_title, group_apps in MARKETPLACE_GROUPS:
+        _make_section(
             parent=market_frame,
-            row=row,
-            col=col,
-            title=title,
-            desc=desc,
-            package=pkg,
+            title=group_title,
+            apps=group_apps,
             status_label=status_label,
             progress_bar=progress_bar,
+            columns=4,
         )
-        col += 1
-        if col > 3:
-            col = 0
-            row += 1
 
-    for i in range(4):
-        market_frame.columnconfigure(i, weight=1, uniform="app")
-
-    # ----------------------------------------------------------
-    # ПАКУЕМ НИЖНЮЮ ПАНЕЛЬ В САМОМ КОНЦЕ — она окажется снизу
-    # ----------------------------------------------------------
+    # --- ПАКУЕМ НИЖНЮЮ ПАНЕЛЬ В КОНЦЕ ---
     bottom_frame.pack(fill="x", side="bottom", pady=(0, 0))
 
-    # Кнопка «Закрыть» и хоткей
     ttk.Button(
-        bottom_frame,
-        text="Закрыть",
-        style="Danger.TButton",
+        bottom_frame, text="Закрыть", style="Danger.TButton",
         command=root.destroy,
     ).pack(side="right", padx=24, pady=(0, 14))
 
-    # ----------------------------------------------------------
-    # ГОРЯЧИЕ КЛАВИШИ
-    # ----------------------------------------------------------
+    # --- ГОРЯЧИЕ КЛАВИШИ ---
     def toggle_fullscreen(event=None):
         root.attributes("-fullscreen", not root.attributes("-fullscreen"))
 

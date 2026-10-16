@@ -506,7 +506,7 @@
         "kind": 2,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "def start():\n    get_admin_permisions()\n    root = tk.Tk()\n    root.title(APP_NAME)\n    root.geometry(\"1120x680\")\n    root.minsize(900, 560)\n    root.configure(bg=BG_ROOT)\n    root.eval(\"tk::PlaceWindow . center\")\n    _setup_styles()\n    # ----------------------------------------------------------",
+        "peekOfCode": "def start():\n    get_admin_permisions()\n    _configure_choco_cache()\n    root = tk.Tk()\n    root.title(APP_NAME)\n    root.geometry(\"1120x680\")\n    root.minsize(900, 560)\n    root.configure(bg=BG_ROOT)\n    root.eval(\"tk::PlaceWindow . center\")\n    _setup_styles()",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -515,7 +515,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "APP_NAME = \"Instally\"\nAPP_TAGLINE = \"Избавляет вас от рутины установки программ\"\n# ==============================================================\n#                    ЦВЕТОВАЯ СХЕМА (Dracula-ish)\n# ==============================================================\nBG_ROOT = \"#1e1f29\"  # фон окна\nBG_PANEL = \"#282a36\"  # панели, нижний бар\nBG_CARD = \"#2f313e\"  # карточки\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"",
+        "peekOfCode": "APP_NAME = \"Instally\"\nAPP_TAGLINE = \"Избавляет вас от рутины установки программ\"\n# ==============================================================\n#                    ЦВЕТОВАЯ СХЕМА (Dracula-ish)\n# ==============================================================\nBG_ROOT = \"#1e1f29\"\nBG_PANEL = \"#282a36\"\nBG_CARD = \"#2f313e\"\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -524,7 +524,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "APP_TAGLINE = \"Избавляет вас от рутины установки программ\"\n# ==============================================================\n#                    ЦВЕТОВАЯ СХЕМА (Dracula-ish)\n# ==============================================================\nBG_ROOT = \"#1e1f29\"  # фон окна\nBG_PANEL = \"#282a36\"  # панели, нижний бар\nBG_CARD = \"#2f313e\"  # карточки\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"",
+        "peekOfCode": "APP_TAGLINE = \"Избавляет вас от рутины установки программ\"\n# ==============================================================\n#                    ЦВЕТОВАЯ СХЕМА (Dracula-ish)\n# ==============================================================\nBG_ROOT = \"#1e1f29\"\nBG_PANEL = \"#282a36\"\nBG_CARD = \"#2f313e\"\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -533,7 +533,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "BG_ROOT = \"#1e1f29\"  # фон окна\nBG_PANEL = \"#282a36\"  # панели, нижний бар\nBG_CARD = \"#2f313e\"  # карточки\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)",
+        "peekOfCode": "BG_ROOT = \"#1e1f29\"\nBG_PANEL = \"#282a36\"\nBG_CARD = \"#2f313e\"\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -542,7 +542,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "BG_PANEL = \"#282a36\"  # панели, нижний бар\nBG_CARD = \"#2f313e\"  # карточки\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"",
+        "peekOfCode": "BG_PANEL = \"#282a36\"\nBG_CARD = \"#2f313e\"\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -551,7 +551,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "BG_CARD = \"#2f313e\"  # карточки\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"",
+        "peekOfCode": "BG_CARD = \"#2f313e\"\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -560,7 +560,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "BG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"",
+        "peekOfCode": "BG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -569,7 +569,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "BG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"",
+        "peekOfCode": "BG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -578,7 +578,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "FG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"",
+        "peekOfCode": "FG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -587,7 +587,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "FG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"",
+        "peekOfCode": "FG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -596,7 +596,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "FG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================",
+        "peekOfCode": "FG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -605,7 +605,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "FG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ",
+        "peekOfCode": "FG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -614,7 +614,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "ACCENT = \"#bd93f9\"  # основной акцент (фиолет)\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================",
+        "peekOfCode": "ACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -623,7 +623,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "ACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================\ndef _make_scrollable(parent: tk.Widget) -> tk.Frame:",
+        "peekOfCode": "ACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================\nCATEGORIES = [",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -632,7 +632,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "ACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================\ndef _make_scrollable(parent: tk.Widget) -> tk.Frame:\n    \"\"\"Canvas + Scrollbar + возвращает вложенный Frame для карточек.\"\"\"",
+        "peekOfCode": "ACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================\nCATEGORIES = [\n    {\"title\": \"Базовый софт\", \"desc\": \"7-Zip, VLC, Chrome, Firefox\",",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -641,7 +641,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "SUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================\ndef _make_scrollable(parent: tk.Widget) -> tk.Frame:\n    \"\"\"Canvas + Scrollbar + возвращает вложенный Frame для карточек.\"\"\"\n    container = tk.Frame(parent, bg=BG_ROOT)",
+        "peekOfCode": "SUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================\nCATEGORIES = [\n    {\"title\": \"Базовый софт\", \"desc\": \"7-Zip, VLC, Chrome, Firefox\",\n     \"packages\": [\"7zip\", \"vlc\", \"googlechrome\", \"firefox\"], \"action\": \"install\"},",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -650,7 +650,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "DANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================\ndef _make_scrollable(parent: tk.Widget) -> tk.Frame:\n    \"\"\"Canvas + Scrollbar + возвращает вложенный Frame для карточек.\"\"\"\n    container = tk.Frame(parent, bg=BG_ROOT)\n    container.pack(fill=\"both\", expand=True)",
+        "peekOfCode": "DANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================\nCATEGORIES = [\n    {\"title\": \"Базовый софт\", \"desc\": \"7-Zip, VLC, Chrome, Firefox\",\n     \"packages\": [\"7zip\", \"vlc\", \"googlechrome\", \"firefox\"], \"action\": \"install\"},\n    {\"title\": \"Для разработчика\", \"desc\": \"Git, VS Code, Python, DBeaver\",",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -659,7 +659,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "DANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================\ndef _make_scrollable(parent: tk.Widget) -> tk.Frame:\n    \"\"\"Canvas + Scrollbar + возвращает вложенный Frame для карточек.\"\"\"\n    container = tk.Frame(parent, bg=BG_ROOT)\n    container.pack(fill=\"both\", expand=True)\n    canvas = tk.Canvas(container, bg=BG_ROOT, highlightthickness=0, bd=0)",
+        "peekOfCode": "DANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================\nCATEGORIES = [\n    {\"title\": \"Базовый софт\", \"desc\": \"7-Zip, VLC, Chrome, Firefox\",\n     \"packages\": [\"7zip\", \"vlc\", \"googlechrome\", \"firefox\"], \"action\": \"install\"},\n    {\"title\": \"Для разработчика\", \"desc\": \"Git, VS Code, Python, DBeaver\",\n     \"packages\": [\"git\", \"vscode\", \"python\", \"dbeaver\"], \"action\": \"install\"},",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -668,7 +668,34 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "BORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ\n# ==============================================================\ndef _make_scrollable(parent: tk.Widget) -> tk.Frame:\n    \"\"\"Canvas + Scrollbar + возвращает вложенный Frame для карточек.\"\"\"\n    container = tk.Frame(parent, bg=BG_ROOT)\n    container.pack(fill=\"both\", expand=True)\n    canvas = tk.Canvas(container, bg=BG_ROOT, highlightthickness=0, bd=0)\n    scrollbar = ttk.Scrollbar(container, orient=\"vertical\", command=canvas.yview)",
+        "peekOfCode": "BORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================\nCATEGORIES = [\n    {\"title\": \"Базовый софт\", \"desc\": \"7-Zip, VLC, Chrome, Firefox\",\n     \"packages\": [\"7zip\", \"vlc\", \"googlechrome\", \"firefox\"], \"action\": \"install\"},\n    {\"title\": \"Для разработчика\", \"desc\": \"Git, VS Code, Python, DBeaver\",\n     \"packages\": [\"git\", \"vscode\", \"python\", \"dbeaver\"], \"action\": \"install\"},\n    {\"title\": \"Сисадмину\", \"desc\": \"Sysinternals, MobaXterm, WinSCP, PuTTY\",",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "CATEGORIES",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "CATEGORIES = [\n    {\"title\": \"Базовый софт\", \"desc\": \"7-Zip, VLC, Chrome, Firefox\",\n     \"packages\": [\"7zip\", \"vlc\", \"googlechrome\", \"firefox\"], \"action\": \"install\"},\n    {\"title\": \"Для разработчика\", \"desc\": \"Git, VS Code, Python, DBeaver\",\n     \"packages\": [\"git\", \"vscode\", \"python\", \"dbeaver\"], \"action\": \"install\"},\n    {\"title\": \"Сисадмину\", \"desc\": \"Sysinternals, MobaXterm, WinSCP, PuTTY\",\n     \"packages\": [\"sysinternals\", \"mobaxterm\", \"winscp\", \"putty\"], \"action\": \"install\"},\n    {\"title\": \"Офисный пакет\", \"desc\": \"LibreOffice, Adobe Reader, 7-Zip\",\n     \"packages\": [\"libreoffice-fresh\", \"adobereader\", \"7zip\"], \"action\": \"install\"},\n    {\"title\": \"Мультимедиа\", \"desc\": \"VLC, GIMP, Inkscape, Audacity, OBS\",",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "MARKETPLACE_GROUPS",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "MARKETPLACE_GROUPS = [\n    (\"🛠  Администрирование и мониторинг\", [\n        (\"PowerShell 7\",        \"Современная оболочка и язык сценариев\",   \"powershell-core\"),\n        (\"Sysinternals Suite\",  \"Набор утилит Microsoft для диагностики\",  \"sysinternals\"),\n        (\"Process Explorer\",    \"Расширенный диспетчер задач\",             \"procexp\"),\n        (\"PsTools\",             \"Консольные утилиты Sysinternals\",         \"pstools\"),\n        (\"MobaXterm\",           \"SSH/RDP/VNC-терминал\",                    \"mobaxterm\"),\n        (\"WinSCP\",              \"SFTP/SCP/FTP-клиент\",                     \"winscp\"),\n        (\"PuTTY\",               \"Классический SSH/Telnet-клиент\",          \"putty\"),\n        (\"Windows Admin Center\",\"Веб-панель управления серверами\",         \"windows-admin-center\"),",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "CHOCO_CACHE_DIR",
+        "kind": 5,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "CHOCO_CACHE_DIR = r\"C:\\ChocolateyCache\"\ndef _configure_choco_cache():\n    \"\"\"Устанавливает папку кэша Chocolatey. Требует прав администратора.\"\"\"\n    import subprocess\n    import os\n    import sys\n    CREATE_NO_WINDOW = 0x08000000 if sys.platform == \"win32\" else 0\n    try:\n        os.makedirs(CHOCO_CACHE_DIR, exist_ok=True)\n    except OSError:",
         "detail": "src.app.main",
         "documentation": {}
     },

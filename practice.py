@@ -60,3 +60,4 @@ if not os.path.exists(choco_path):
     error_msg = f"Файл choco.exe отсутствует по указанному пути: {choco_path}"
     raise FileNotFoundError(error_msg)
 print("11")
+

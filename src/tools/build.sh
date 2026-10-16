@@ -84,7 +84,7 @@ run_builder() {
     echo '[$(date +%H:%M:%S)] Upgrading pip...'; \
     pip3 install --upgrade pip > /dev/null 2>&1; \
     echo '[$(date +%H:%M:%S)] Installing PyInstaller and dependencies...'; \
-    pip3 install pyinstaller==5.13.2 $IMPORTS > /dev/null 2>&1; \
+    pip3 install pyinstaller==6.11.1 $IMPORTS > /dev/null 2>&1; \
     echo '[$(date +%H:%M:%S)] Compiling with PyInstaller...'; \
     pyinstaller /root/$TARGET --distpath /root/ --onefile --clean $HIDDEN_IMPORTS > /dev/null 2>&1; \
     echo '[$(date +%H:%M:%S)] Build process completed.'; \
@@ -100,17 +100,17 @@ run_builder() {
 }
 
 case $ARCH in
-    "x86_64") run_builder "linux/amd64" "amd64/python:3.8-buster" ;;
-    "i386") run_builder "linux/i386" "i386/python:3.8-buster" ;;
-    "armv7l") run_builder "linux/arm/v7" "arm32v7/python:3.8-buster" ;;
-    "armv8l") run_builder "linux/arm64" "arm64v8/python:3.8-buster" ;;
-    "aarch64") run_builder "linux/arm64" "arm64v8/python:3.8-buster" ;;
-    "ppc64le") run_builder "linux/ppc64le" "ppc64le/python:3.8-buster" ;;
-    "mips64") run_builder "linux/mips64le" "mips64le/python:3.9-buster" ;;
-    "s390x") run_builder "linux/s390x" "s390x/python:3.8-buster" ;;
-    "riscv64") run_builder "linux/riscv64" "riscv64/python:3.9-buster" ;;
-    *) 
-    
-    echo "Error: Unknown architecture '$ARCH'"
-    list;;
+    "x86_64")   run_builder "linux/amd64"   "python:3.12" ;;
+    "i386")     run_builder "linux/386"     "i386/python:3.12" ;;
+    "armv7l")   run_builder "linux/arm/v7"  "arm32v7/python:3.12" ;;
+    "armv8l"|"aarch64") run_builder "linux/arm64" "arm64v8/python:3.12" ;;
+    "ppc64le")  run_builder "linux/ppc64le" "ppc64le/python:3.12" ;;
+    "s390x")    run_builder "linux/s390x"   "s390x/python:3.12" ;;
+    "mips64")   run_builder "linux/mips64le" "debian:trixie" ;;
+    "riscv64")  run_builder "linux/riscv64" "debian:trixie" ;; 
+    *)
+        echo "Error: Unknown architecture '$ARCH'"
+        list
+        exit 1
+        ;;
 esac

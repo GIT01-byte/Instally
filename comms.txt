@@ -1,0 +1,1 @@
+MSYS_NO_PATHCONV=1 ./src/tools/build.sh x86_64 ./src/app/main.py --imports loguru
