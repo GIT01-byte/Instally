@@ -60,6 +60,9 @@ def _install_choco_via_powershell() -> str:
         "'https://community.chocolatey.org/install.ps1'))"
     )
 
+    # Скрываем окно PowerShell
+    CREATE_NO_WINDOW = 0x08000000 if sys.platform == "win32" else 0
+
     process = subprocess.run(
         [
             "powershell",
@@ -73,6 +76,7 @@ def _install_choco_via_powershell() -> str:
         text=True,
         encoding=_get_console_encoding(),
         errors="replace",
+        creationflags=CREATE_NO_WINDOW,
     )
 
     if process.returncode != 0:
@@ -131,11 +135,6 @@ def _run_choco_with_logs(
     """
     Фоновый запуск choco.exe. Никаких PowerShell-обёрток:
     системный choco.exe сам умеет настраивать PSModulePath.
-
-    Возвращает код возврата:
-        0       — успех,
-        3010    — успех, требуется перезагрузка,
-        иное    — ошибка.
     """
     current_thread_name = threading.current_thread().name
     prefix = f"[{package_index}/{package_total}] {package_label}".strip()
@@ -166,13 +165,18 @@ def _run_choco_with_logs(
 
         update_ui_text(f"{prefix}: Запуск команды: {' '.join(command_args)}")
 
+        # Скрываем окно консоли
+        CREATE_NO_WINDOW = 0x08000000 if sys.platform == "win32" else 0
+
         process = subprocess.Popen(
             full_command,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
+            stdin=subprocess.DEVNULL,
             text=True,
             encoding=_get_console_encoding(),
             errors="replace",
+            creationflags=CREATE_NO_WINDOW,
         )
 
         progress_re = re.compile(r"(\d+)\s*%")
@@ -281,6 +285,8 @@ def choco_install(
                     text=f"Не удалось установить Chocolatey:\n{msg}"
                 ),
             )
+            # Сохраняем ошибку в поток, чтобы фасад знал
+            choco_thread.failed_packages = packages_list
             return
 
         total = len(packages_list)
@@ -297,10 +303,12 @@ def choco_install(
             ttk_log_widget.after(
                 0, lambda: ttk_log_widget.config(text="Список пакетов пуст.")
             )
+            choco_thread.failed_packages = []
             return
 
         success_count = 0
         fail_count = 0
+        failed_packages = []  # <--- Список упавших пакетов
 
         for i, package in enumerate(packages_list, start=1):
             full_command = [action, package] + choco_args_list
@@ -326,6 +334,7 @@ def choco_install(
                 logger.info(f"Пакет '{package}' обработан успешно ({i}/{total}).")
             else:
                 fail_count += 1
+                failed_packages.append(package)  # <--- Запоминаем упавший пакет
                 logger.warning(
                     f"Пакет '{package}' завершился с кодом {rc} ({i}/{total})."
                 )
@@ -335,6 +344,9 @@ def choco_install(
         summary = f"Готово. Успешно: {success_count}, ошибок: {fail_count} из {total}."
         logger.info(summary)
         ttk_log_widget.after(0, lambda s=summary: ttk_log_widget.config(text=s))
+
+        # Сохраняем упавшие пакеты в поток
+        choco_thread.failed_packages = failed_packages
 
     choco_thread = threading.Thread(
         target=worker,
@@ -360,12 +372,14 @@ def clear_choco_cache():
 
     logger.info("[Cache Remover] Очистка кэша Chocolatey...")
     try:
+        CREATE_NO_WINDOW = 0x08000000 if sys.platform == "win32" else 0
         result = subprocess.run(
             [choco_exe, "cache", "remove", "--all", "-y"],
             capture_output=True,
             text=True,
             encoding=_get_console_encoding(),
             errors="replace",
+            creationflags=CREATE_NO_WINDOW,
         )
         if result.returncode == 0:
             logger.info("[Cache Remover] Очистка кэша завершена успешно.")

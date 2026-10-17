@@ -248,6 +248,9 @@ def apt_install(
                 summary = f"Готово. Обновление завершилось с кодом {rc}."
             logger.info(summary)
             ttk_log_widget.after(0, lambda s=summary: ttk_log_widget.config(text=s))
+
+            # Для обновления системы fallback на Snap не нужен
+            apt_thread.failed_packages = []
             return
 
         # --- Ветка установки пакетов ---
@@ -255,6 +258,7 @@ def apt_install(
             ttk_log_widget.after(
                 0, lambda: ttk_log_widget.config(text="Список пакетов пуст.")
             )
+            apt_thread.failed_packages = []
             return
 
         # Перед установкой всегда обновляем индексы — иначе пакет может не найтись.
@@ -275,6 +279,7 @@ def apt_install(
 
         success_count = 0
         fail_count = 0
+        failed_packages = []  # <--- Список для упавших пакетов (для Snap)
 
         for i, package in enumerate(packages_list, start=1):
             full_command = [action, package] + apt_args_list
@@ -300,6 +305,7 @@ def apt_install(
                 logger.info(f"Пакет '{package}' обработан успешно ({i}/{total}).")
             else:
                 fail_count += 1
+                failed_packages.append(package)  # <--- Запоминаем для Snap
                 logger.warning(
                     f"Пакет '{package}' завершился с кодом {rc} ({i}/{total})."
                 )
@@ -309,6 +315,9 @@ def apt_install(
         summary = f"Готово. Успешно: {success_count}, ошибок: {fail_count} из {total}."
         logger.info(summary)
         ttk_log_widget.after(0, lambda s=summary: ttk_log_widget.config(text=s))
+
+        # <--- Сохраняем список упавших пакетов в поток
+        apt_thread.failed_packages = failed_packages
 
     apt_thread = threading.Thread(
         target=worker,

@@ -1,10 +1,10 @@
 [
     {
-        "label": "ConfigParser",
-        "importPath": "configparser",
-        "description": "configparser",
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
         "isExtraImport": true,
-        "detail": "configparser",
+        "detail": "pathlib",
         "documentation": {}
     },
     {
@@ -167,6 +167,38 @@
         "documentation": {}
     },
     {
+        "label": "Label",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
+        "label": "ttk",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
+        "label": "Label",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
+        "label": "ttk",
+        "importPath": "tkinter",
+        "description": "tkinter",
+        "isExtraImport": true,
+        "detail": "tkinter",
+        "documentation": {}
+    },
+    {
         "label": "ttk",
         "importPath": "tkinter",
         "description": "tkinter",
@@ -231,11 +263,99 @@
         "documentation": {}
     },
     {
+        "label": "Union",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
         "label": "Optional",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
         "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Union",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "importPath": "utils.logging",
+        "description": "utils.logging",
+        "isExtraImport": true,
+        "detail": "utils.logging",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "importPath": "utils.logging",
+        "description": "utils.logging",
+        "isExtraImport": true,
+        "detail": "utils.logging",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "importPath": "utils.logging",
+        "description": "utils.logging",
+        "isExtraImport": true,
+        "detail": "utils.logging",
         "documentation": {}
     },
     {
@@ -277,6 +397,24 @@
         "importPath": "shutil",
         "description": "shutil",
         "detail": "shutil",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "queue",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "queue",
+        "description": "queue",
+        "detail": "queue",
         "documentation": {}
     },
     {
@@ -331,20 +469,27 @@
         "documentation": {}
     },
     {
-        "label": "CONFIG_PATH",
-        "kind": 5,
-        "importPath": "src.app.core.config",
-        "description": "src.app.core.config",
-        "peekOfCode": "CONFIG_PATH = BASE_DIR / \"src\" / \"config.ini\"\n# ---------------------------------------------------------------------------\n# Дефолтные значения (используются, если config.ini нет / битый / неполный)\n# ---------------------------------------------------------------------------\nDEFAULTS: dict[str, dict[str, str]] = {\n    \"App\": {\n        \"log_level\": \"INFO\",\n    },\n}\ndef _build_default_config() -> ConfigParser:",
-        "detail": "src.app.core.config",
+        "label": "CATALOG",
+        "importPath": "data.catalog",
+        "description": "data.catalog",
+        "isExtraImport": true,
+        "detail": "data.catalog",
         "documentation": {}
     },
     {
-        "label": "config",
+        "label": "CATALOG",
+        "importPath": "app.data.catalog",
+        "description": "app.data.catalog",
+        "isExtraImport": true,
+        "detail": "app.data.catalog",
+        "documentation": {}
+    },
+    {
+        "label": "DEFAULTS",
         "kind": 5,
         "importPath": "src.app.core.config",
         "description": "src.app.core.config",
-        "peekOfCode": "config = _load_config()\n# ---------------------------------------------------------------------------\n# Публичные константы, использующиеся в других модулях\n# ---------------------------------------------------------------------------\nLOG_LEVEL = config.get(\"App\", \"log_level\", fallback=\"INFO\")",
+        "peekOfCode": "DEFAULTS = {\n    \"App\": {\n        \"log_level\": \"INFO\",\n    },\n    # Сюда можно добавлять другие секции в будущем, например:\n    # \"UI\": {\n    #     \"theme\": \"dark\",\n    # }\n}\n# ==============================================================",
         "detail": "src.app.core.config",
         "documentation": {}
     },
@@ -353,8 +498,17 @@
         "kind": 5,
         "importPath": "src.app.core.config",
         "description": "src.app.core.config",
-        "peekOfCode": "LOG_LEVEL = config.get(\"App\", \"log_level\", fallback=\"INFO\")",
+        "peekOfCode": "LOG_LEVEL = DEFAULTS.get(\"App\", {}).get(\"log_level\", \"INFO\")",
         "detail": "src.app.core.config",
+        "documentation": {}
+    },
+    {
+        "label": "CATALOG",
+        "kind": 5,
+        "importPath": "src.app.data.catalog",
+        "description": "src.app.data.catalog",
+        "peekOfCode": "CATALOG = [\n    {\n        \"category\": \"Базовый софт\",\n        \"name\": \"7-Zip\",\n        \"desc\": \"Архиватор\",\n        \"choco\": \"7zip\",\n        \"apt\": \"7zip\",\n        \"dnf\": \"p7zip\",\n        \"snap\": \"\",\n        \"winget\": \"7zip.7zip\",",
+        "detail": "src.app.data.catalog",
         "documentation": {}
     },
     {
@@ -457,11 +611,47 @@
         "documentation": {}
     },
     {
+        "label": "snap_install",
+        "kind": 2,
+        "importPath": "src.app.engines.snapEngine",
+        "description": "src.app.engines.snapEngine",
+        "peekOfCode": "def snap_install(\n    action: str,\n    ttk_log_widget: Label,\n    ttk_progress_bar: ttk.Progressbar,\n    packages: Optional[List[Union[str, Tuple[str, bool]]]] = None,\n    snap_args: Optional[List[str]] = None,\n    thread_name: str = \"SnapWorker\",\n) -> threading.Thread:\n    \"\"\"\n    Запускает установку пакетов через Snap.",
+        "detail": "src.app.engines.snapEngine",
+        "documentation": {}
+    },
+    {
+        "label": "SNAP_INACTIVITY_TIMEOUT",
+        "kind": 5,
+        "importPath": "src.app.engines.snapEngine",
+        "description": "src.app.engines.snapEngine",
+        "peekOfCode": "SNAP_INACTIVITY_TIMEOUT = 120\ndef _get_console_encoding() -> str:\n    return \"utf-8\"\ndef _find_snap() -> str | None:\n    \"\"\"Ищет исполняемый файл snap в системе.\"\"\"\n    snap = shutil.which(\"snap\")\n    if snap:\n        return snap\n    # Стандартный путь в Ubuntu\n    if os.path.exists(\"/usr/bin/snap\"):",
+        "detail": "src.app.engines.snapEngine",
+        "documentation": {}
+    },
+    {
+        "label": "winget_install",
+        "kind": 2,
+        "importPath": "src.app.engines.wingetEngine",
+        "description": "src.app.engines.wingetEngine",
+        "peekOfCode": "def winget_install(\n    action: str,\n    ttk_log_widget: Label,\n    ttk_progress_bar: ttk.Progressbar,\n    packages: Optional[List[str]] = None,\n    winget_args: Optional[List[str]] = None,\n    thread_name: str = \"WingetWorker\",\n) -> threading.Thread:\n    packages_list = list(packages) if packages else []\n    default_args = [",
+        "detail": "src.app.engines.wingetEngine",
+        "documentation": {}
+    },
+    {
+        "label": "WINGET_INACTIVITY_TIMEOUT",
+        "kind": 5,
+        "importPath": "src.app.engines.wingetEngine",
+        "description": "src.app.engines.wingetEngine",
+        "peekOfCode": "WINGET_INACTIVITY_TIMEOUT = 120\ndef _get_console_encoding() -> str:\n    try:\n        import locale\n        enc = locale.getpreferredencoding(False)\n        if enc:\n            return enc\n    except Exception:\n        pass\n    return \"utf-8\"",
+        "detail": "src.app.engines.wingetEngine",
+        "documentation": {}
+    },
+    {
         "label": "install",
         "kind": 2,
         "importPath": "src.app.service.installer",
         "description": "src.app.service.installer",
-        "peekOfCode": "def install(\n    action: str,\n    ttk_log_widget: Label,\n    ttk_progress_bar: ttk.Progressbar,\n    packages: Optional[List[str]] = None,\n    args: Optional[List[str]] = None,\n):\n    \"\"\"\n    Универсальная точка входа. Сама выбирает движок по текущей ОС.\n    action: 'install' | 'upgrade'",
+        "peekOfCode": "def install(\n    action: str,\n    ttk_log_widget: Label,\n    ttk_progress_bar: ttk.Progressbar,\n    packages: Optional[List[str]] = None,\n    args: Optional[List[str]] = None,\n    winget_mapping: Optional[dict] = None,\n    snap_mapping: Optional[\n        dict\n    ] = None,  # Формат: {\"код-apt\": (\"код-snap\", is_classic)}",
         "detail": "src.app.service.installer",
         "documentation": {}
     },
@@ -502,11 +692,20 @@
         "documentation": {}
     },
     {
+        "label": "TaskManager",
+        "kind": 6,
+        "importPath": "src.app.main",
+        "description": "src.app.main",
+        "peekOfCode": "class TaskManager:\n    def __init__(self, root, status_label, progress_bar, list_frame):\n        self.root = root\n        self.status_label = status_label\n        self.progress_bar = progress_bar\n        self.list_frame = list_frame\n        self.queue = queue.Queue()\n        self.is_running = False\n        # Запускаем фоновый обработчик очереди\n        threading.Thread(target=self._process_queue, daemon=True).start()",
+        "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
         "label": "start",
         "kind": 2,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "def start():\n    get_admin_permisions()\n    _configure_choco_cache()\n    root = tk.Tk()\n    root.title(APP_NAME)\n    root.geometry(\"1120x680\")\n    root.minsize(900, 560)\n    root.configure(bg=BG_ROOT)\n    root.eval(\"tk::PlaceWindow . center\")\n    _setup_styles()",
+        "peekOfCode": "def start():\n    get_admin_permisions()\n    _configure_choco_cache()\n    root = tk.Tk()\n    root.title(APP_NAME)\n    root.geometry(\"1280x850\")\n    root.minsize(1000, 700)\n    root.configure(bg=BG_ROOT)\n    root.eval(\"tk::PlaceWindow . center\")\n    _setup_styles()",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -515,7 +714,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "APP_NAME = \"Instally\"\nAPP_TAGLINE = \"Избавляет вас от рутины установки программ\"\n# ==============================================================\n#                    ЦВЕТОВАЯ СХЕМА (Dracula-ish)\n# ==============================================================\nBG_ROOT = \"#1e1f29\"\nBG_PANEL = \"#282a36\"\nBG_CARD = \"#2f313e\"\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"",
+        "peekOfCode": "APP_NAME = \"Instally\"\nAPP_TAGLINE = \"Избавляет вас от рутины установки программ\"\nBG_ROOT = \"#1e1f29\"\nBG_PANEL = \"#282a36\"\nBG_CARD = \"#2f313e\"\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -524,7 +723,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "APP_TAGLINE = \"Избавляет вас от рутины установки программ\"\n# ==============================================================\n#                    ЦВЕТОВАЯ СХЕМА (Dracula-ish)\n# ==============================================================\nBG_ROOT = \"#1e1f29\"\nBG_PANEL = \"#282a36\"\nBG_CARD = \"#2f313e\"\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"",
+        "peekOfCode": "APP_TAGLINE = \"Избавляет вас от рутины установки программ\"\nBG_ROOT = \"#1e1f29\"\nBG_PANEL = \"#282a36\"\nBG_CARD = \"#2f313e\"\nBG_CARD_HOVER = \"#383a4a\"\nBG_INPUT = \"#21222c\"\nFG_TITLE = \"#f8f8f2\"\nFG_TEXT = \"#d7d7e0\"\nFG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -596,7 +795,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "FG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================",
+        "peekOfCode": "FG_MUTED = \"#8b8d9a\"\nFG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\nCHOCO_CACHE_DIR = r\"C:\\ChocolateyCache\"",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -605,7 +804,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "FG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ",
+        "peekOfCode": "FG_DIM = \"#5f6170\"\nACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\nCHOCO_CACHE_DIR = r\"C:\\ChocolateyCache\"\n# ==============================================================",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -614,7 +813,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "ACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================",
+        "peekOfCode": "ACCENT = \"#bd93f9\"\nACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\nCHOCO_CACHE_DIR = r\"C:\\ChocolateyCache\"\n# ==============================================================\n#                    МЕНЕДЖЕР ОЧЕРЕДИ ЗАДАЧ",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -623,7 +822,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "ACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================\nCATEGORIES = [",
+        "peekOfCode": "ACCENT_HOVER = \"#caa9fa\"\nACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\nCHOCO_CACHE_DIR = r\"C:\\ChocolateyCache\"\n# ==============================================================\n#                    МЕНЕДЖЕР ОЧЕРЕДИ ЗАДАЧ\n# ==============================================================",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -632,7 +831,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "ACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================\nCATEGORIES = [\n    {\"title\": \"Базовый софт\", \"desc\": \"7-Zip, VLC, Chrome, Firefox\",",
+        "peekOfCode": "ACCENT_DARK = \"#8a5cf6\"\nSUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\nCHOCO_CACHE_DIR = r\"C:\\ChocolateyCache\"\n# ==============================================================\n#                    МЕНЕДЖЕР ОЧЕРЕДИ ЗАДАЧ\n# ==============================================================\nclass TaskManager:",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -641,7 +840,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "SUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================\nCATEGORIES = [\n    {\"title\": \"Базовый софт\", \"desc\": \"7-Zip, VLC, Chrome, Firefox\",\n     \"packages\": [\"7zip\", \"vlc\", \"googlechrome\", \"firefox\"], \"action\": \"install\"},",
+        "peekOfCode": "SUCCESS = \"#50fa7b\"\nDANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\nCHOCO_CACHE_DIR = r\"C:\\ChocolateyCache\"\n# ==============================================================\n#                    МЕНЕДЖЕР ОЧЕРЕДИ ЗАДАЧ\n# ==============================================================\nclass TaskManager:\n    def __init__(self, root, status_label, progress_bar, list_frame):",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -650,7 +849,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "DANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================\nCATEGORIES = [\n    {\"title\": \"Базовый софт\", \"desc\": \"7-Zip, VLC, Chrome, Firefox\",\n     \"packages\": [\"7zip\", \"vlc\", \"googlechrome\", \"firefox\"], \"action\": \"install\"},\n    {\"title\": \"Для разработчика\", \"desc\": \"Git, VS Code, Python, DBeaver\",",
+        "peekOfCode": "DANGER = \"#ff5555\"\nDANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\nCHOCO_CACHE_DIR = r\"C:\\ChocolateyCache\"\n# ==============================================================\n#                    МЕНЕДЖЕР ОЧЕРЕДИ ЗАДАЧ\n# ==============================================================\nclass TaskManager:\n    def __init__(self, root, status_label, progress_bar, list_frame):\n        self.root = root",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -659,7 +858,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "DANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================\nCATEGORIES = [\n    {\"title\": \"Базовый софт\", \"desc\": \"7-Zip, VLC, Chrome, Firefox\",\n     \"packages\": [\"7zip\", \"vlc\", \"googlechrome\", \"firefox\"], \"action\": \"install\"},\n    {\"title\": \"Для разработчика\", \"desc\": \"Git, VS Code, Python, DBeaver\",\n     \"packages\": [\"git\", \"vscode\", \"python\", \"dbeaver\"], \"action\": \"install\"},",
+        "peekOfCode": "DANGER_HOVER = \"#ff6e6e\"\nBORDER = \"#3a3c4a\"\nCHOCO_CACHE_DIR = r\"C:\\ChocolateyCache\"\n# ==============================================================\n#                    МЕНЕДЖЕР ОЧЕРЕДИ ЗАДАЧ\n# ==============================================================\nclass TaskManager:\n    def __init__(self, root, status_label, progress_bar, list_frame):\n        self.root = root\n        self.status_label = status_label",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -668,25 +867,7 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "BORDER = \"#3a3c4a\"\n# ==============================================================\n#                    ДАННЫЕ: КАТЕГОРИИ\n# ==============================================================\nCATEGORIES = [\n    {\"title\": \"Базовый софт\", \"desc\": \"7-Zip, VLC, Chrome, Firefox\",\n     \"packages\": [\"7zip\", \"vlc\", \"googlechrome\", \"firefox\"], \"action\": \"install\"},\n    {\"title\": \"Для разработчика\", \"desc\": \"Git, VS Code, Python, DBeaver\",\n     \"packages\": [\"git\", \"vscode\", \"python\", \"dbeaver\"], \"action\": \"install\"},\n    {\"title\": \"Сисадмину\", \"desc\": \"Sysinternals, MobaXterm, WinSCP, PuTTY\",",
-        "detail": "src.app.main",
-        "documentation": {}
-    },
-    {
-        "label": "CATEGORIES",
-        "kind": 5,
-        "importPath": "src.app.main",
-        "description": "src.app.main",
-        "peekOfCode": "CATEGORIES = [\n    {\"title\": \"Базовый софт\", \"desc\": \"7-Zip, VLC, Chrome, Firefox\",\n     \"packages\": [\"7zip\", \"vlc\", \"googlechrome\", \"firefox\"], \"action\": \"install\"},\n    {\"title\": \"Для разработчика\", \"desc\": \"Git, VS Code, Python, DBeaver\",\n     \"packages\": [\"git\", \"vscode\", \"python\", \"dbeaver\"], \"action\": \"install\"},\n    {\"title\": \"Сисадмину\", \"desc\": \"Sysinternals, MobaXterm, WinSCP, PuTTY\",\n     \"packages\": [\"sysinternals\", \"mobaxterm\", \"winscp\", \"putty\"], \"action\": \"install\"},\n    {\"title\": \"Офисный пакет\", \"desc\": \"LibreOffice, Adobe Reader, 7-Zip\",\n     \"packages\": [\"libreoffice-fresh\", \"adobereader\", \"7zip\"], \"action\": \"install\"},\n    {\"title\": \"Мультимедиа\", \"desc\": \"VLC, GIMP, Inkscape, Audacity, OBS\",",
-        "detail": "src.app.main",
-        "documentation": {}
-    },
-    {
-        "label": "MARKETPLACE_GROUPS",
-        "kind": 5,
-        "importPath": "src.app.main",
-        "description": "src.app.main",
-        "peekOfCode": "MARKETPLACE_GROUPS = [\n    (\"🛠  Администрирование и мониторинг\", [\n        (\"PowerShell 7\",        \"Современная оболочка и язык сценариев\",   \"powershell-core\"),\n        (\"Sysinternals Suite\",  \"Набор утилит Microsoft для диагностики\",  \"sysinternals\"),\n        (\"Process Explorer\",    \"Расширенный диспетчер задач\",             \"procexp\"),\n        (\"PsTools\",             \"Консольные утилиты Sysinternals\",         \"pstools\"),\n        (\"MobaXterm\",           \"SSH/RDP/VNC-терминал\",                    \"mobaxterm\"),\n        (\"WinSCP\",              \"SFTP/SCP/FTP-клиент\",                     \"winscp\"),\n        (\"PuTTY\",               \"Классический SSH/Telnet-клиент\",          \"putty\"),\n        (\"Windows Admin Center\",\"Веб-панель управления серверами\",         \"windows-admin-center\"),",
+        "peekOfCode": "BORDER = \"#3a3c4a\"\nCHOCO_CACHE_DIR = r\"C:\\ChocolateyCache\"\n# ==============================================================\n#                    МЕНЕДЖЕР ОЧЕРЕДИ ЗАДАЧ\n# ==============================================================\nclass TaskManager:\n    def __init__(self, root, status_label, progress_bar, list_frame):\n        self.root = root\n        self.status_label = status_label\n        self.progress_bar = progress_bar",
         "detail": "src.app.main",
         "documentation": {}
     },
@@ -695,8 +876,26 @@
         "kind": 5,
         "importPath": "src.app.main",
         "description": "src.app.main",
-        "peekOfCode": "CHOCO_CACHE_DIR = r\"C:\\ChocolateyCache\"\ndef _configure_choco_cache():\n    \"\"\"Устанавливает папку кэша Chocolatey. Требует прав администратора.\"\"\"\n    import subprocess\n    import os\n    import sys\n    CREATE_NO_WINDOW = 0x08000000 if sys.platform == \"win32\" else 0\n    try:\n        os.makedirs(CHOCO_CACHE_DIR, exist_ok=True)\n    except OSError:",
+        "peekOfCode": "CHOCO_CACHE_DIR = r\"C:\\ChocolateyCache\"\n# ==============================================================\n#                    МЕНЕДЖЕР ОЧЕРЕДИ ЗАДАЧ\n# ==============================================================\nclass TaskManager:\n    def __init__(self, root, status_label, progress_bar, list_frame):\n        self.root = root\n        self.status_label = status_label\n        self.progress_bar = progress_bar\n        self.list_frame = list_frame",
         "detail": "src.app.main",
+        "documentation": {}
+    },
+    {
+        "label": "get_os",
+        "kind": 2,
+        "importPath": "src.tests.test_catalog",
+        "description": "src.tests.test_catalog",
+        "peekOfCode": "def get_os():\n    if sys.platform == \"win32\":\n        return \"windows\"\n    if sys.platform.startswith(\"linux\"):\n        return \"linux\"\n    return \"unknown\"\ndef _check_choco(pkg: str) -> bool:\n    \"\"\"Проверяет наличие пакета в Chocolatey.\"\"\"\n    try:\n        result = subprocess.run(",
+        "detail": "src.tests.test_catalog",
+        "documentation": {}
+    },
+    {
+        "label": "test_packages_exist",
+        "kind": 2,
+        "importPath": "src.tests.test_catalog",
+        "description": "src.tests.test_catalog",
+        "peekOfCode": "def test_packages_exist():\n    \"\"\"Проверяет, что все пакеты из встроенного каталога реально существуют в репозиториях.\"\"\"\n    os_type = get_os()\n    if os_type == \"windows\":\n        main_key = \"choco\"\n        fallback_key = \"winget\"\n        fallback_name = \"winget\"\n    elif os_type == \"linux\":\n        main_key = \"apt\"\n        fallback_key = \"snap\"",
+        "detail": "src.tests.test_catalog",
         "documentation": {}
     },
     {

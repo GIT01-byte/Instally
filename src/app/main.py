@@ -1,8 +1,16 @@
 import tkinter as tk
 from tkinter import ttk
+import sys
+import subprocess
+import queue
+import threading
 
 from utils.os_handling import get_admin_permisions
 from service.installer import install
+from utils.logging import logger
+
+# Импортируем каталог прямо из Python-файла
+from data.catalog import CATALOG
 
 # ==============================================================
 #                    НАСТРОЙКИ ПРИЛОЖЕНИЯ
@@ -10,9 +18,6 @@ from service.installer import install
 APP_NAME = "Instally"
 APP_TAGLINE = "Избавляет вас от рутины установки программ"
 
-# ==============================================================
-#                    ЦВЕТОВАЯ СХЕМА (Dracula-ish)
-# ==============================================================
 BG_ROOT = "#1e1f29"
 BG_PANEL = "#282a36"
 BG_CARD = "#2f313e"
@@ -33,136 +38,133 @@ DANGER = "#ff5555"
 DANGER_HOVER = "#ff6e6e"
 BORDER = "#3a3c4a"
 
-
-# ==============================================================
-#                    ДАННЫЕ: КАТЕГОРИИ
-# ==============================================================
-CATEGORIES = [
-    {"title": "Базовый софт", "desc": "7-Zip, VLC, Chrome, Firefox",
-     "packages": ["7zip", "vlc", "googlechrome", "firefox"], "action": "install"},
-    {"title": "Для разработчика", "desc": "Git, VS Code, Python, DBeaver",
-     "packages": ["git", "vscode", "python", "dbeaver"], "action": "install"},
-    {"title": "Сисадмину", "desc": "Sysinternals, MobaXterm, WinSCP, PuTTY",
-     "packages": ["sysinternals", "mobaxterm", "winscp", "putty"], "action": "install"},
-    {"title": "Офисный пакет", "desc": "LibreOffice, Adobe Reader, 7-Zip",
-     "packages": ["libreoffice-fresh", "adobereader", "7zip"], "action": "install"},
-    {"title": "Мультимедиа", "desc": "VLC, GIMP, Inkscape, Audacity, OBS",
-     "packages": ["vlc", "gimp", "inkscape", "audacity", "obs-studio"], "action": "install"},
-    {"title": "Графика и 3D", "desc": "GIMP, Inkscape, Blender",
-     "packages": ["gimp", "inkscape", "blender"], "action": "install"},
-    {"title": "Браузеры", "desc": "Firefox, Opera, Edge, Chrome",
-     "packages": ["firefox", "opera", "microsoft-edge", "googlechrome"], "action": "install"},
-    {"title": "Для преподавания", "desc": "Scratch, Thonny, GeoGebra, Maxima",
-     "packages": ["scratch", "thonny", "geogebra", "maxima"], "action": "install"},
-    {"title": "Диагностика системы", "desc": "CPU-Z, GPU-Z, HWMonitor, Speccy",
-     "packages": ["cpu-z", "gpu-z", "hwmonitor", "speccy"], "action": "install"},
-    {"title": "Виртуализация", "desc": "VirtualBox, Docker Desktop, GNS3",
-     "packages": ["virtualbox", "docker-desktop", "gns3"], "action": "install"},
-    {"title": "Обновление системы", "desc": "Обновить все установленные программы",
-     "packages": ["all"], "action": "upgrade", "button_text": "Обновить"},
-]
-
-
-# ==============================================================
-#                    ДАННЫЕ: МАРКЕТПЛЕЙС (группы)
-# ==============================================================
-MARKETPLACE_GROUPS = [
-    ("🛠  Администрирование и мониторинг", [
-        ("PowerShell 7",        "Современная оболочка и язык сценариев",   "powershell-core"),
-        ("Sysinternals Suite",  "Набор утилит Microsoft для диагностики",  "sysinternals"),
-        ("Process Explorer",    "Расширенный диспетчер задач",             "procexp"),
-        ("PsTools",             "Консольные утилиты Sysinternals",         "pstools"),
-        ("MobaXterm",           "SSH/RDP/VNC-терминал",                    "mobaxterm"),
-        ("WinSCP",              "SFTP/SCP/FTP-клиент",                     "winscp"),
-        ("PuTTY",               "Классический SSH/Telnet-клиент",          "putty"),
-        ("Windows Admin Center","Веб-панель управления серверами",         "windows-admin-center"),
-        ("Zabbix Agent",        "Агент системы мониторинга Zabbix",        "zabbix-agent"),
-    ]),
-
-    ("💻 Разработка", [
-        ("Python 3",            "Интерпретатор Python",                    "python"),
-        ("Git",                 "Система контроля версий",                 "git"),
-        ("VS Code",             "Редактор кода от Microsoft",              "vscode"),
-        ("Visual Studio 2022",  "IDE для .NET, C++, C#",                   "visualstudio2022community"),
-        ("IntelliJ IDEA CE",    "IDE для Java и JVM-языков",               "intellijidea-community"),
-        ("PyCharm CE",          "IDE для Python",                          "pycharm-community"),
-        ("Code::Blocks",        "IDE для C/C++",                           "codeblocks"),
-        ("Qt Creator",          "IDE для C++/Qt",                          "qtcreator"),
-        ("Android Studio",      "IDE для Android-разработки",              "androidstudio"),
-        ("DBeaver",             "Универсальный клиент БД",                 "dbeaver"),
-        ("MySQL",               "СУБД MySQL",                              "mysql"),
-        ("MariaDB",             "СУБД MariaDB",                            "mariadb"),
-        ("Nginx",               "Веб-сервер и reverse-proxy",              "nginx"),
-        ("Docker Desktop",      "Контейнеризация",                         "docker-desktop"),
-        ("VirtualBox",          "Виртуальные машины",                      "virtualbox"),
-        ("GNS3",                "Симулятор сетей",                         "gns3"),
-    ]),
-
-    ("📄 Офис и документы", [
-        ("LibreOffice",         "Свободный офисный пакет",                 "libreoffice-fresh"),
-        ("Adobe Reader",        "Просмотр PDF",                            "adobereader"),
-        ("Notepad++",           "Продвинутый текстовый редактор",          "notepadplusplus"),
-        ("7-Zip",               "Архиватор",                               "7zip"),
-        ("WinRAR",              "Архиватор RAR/ZIP",                       "winrar"),
-        ("Everything",          "Мгновенный поиск файлов",                 "everything"),
-    ]),
-
-    ("🎨 Мультимедиа и графика", [
-        ("VLC",                 "Медиаплеер для всех форматов",            "vlc"),
-        ("Spotify",             "Музыкальный стриминг",                    "spotify"),
-        ("Audacity",            "Аудиоредактор",                           "audacity"),
-        ("OBS Studio",          "Запись и стриминг экрана",                "obs-studio"),
-        ("GIMP",                "Растровый графический редактор",          "gimp"),
-        ("Inkscape",            "Векторный графический редактор",          "inkscape"),
-        ("Blender",             "3D-моделирование и анимация",             "blender"),
-    ]),
-
-    ("🎓 Образование", [
-        ("Scratch",             "Визуальное программирование",             "scratch"),
-        ("Thonny",              "Python-IDE для начинающих",               "thonny"),
-        ("GeoGebra",            "Математическая визуализация",             "geogebra"),
-        ("Maxima",              "Система компьютерной алгебры",            "maxima"),
-        ("RustDesk",            "Удалённое управление компьютером",        "rustdesk"),
-    ]),
-
-    ("🔍 Диагностика и браузеры", [
-        ("CPU-Z",               "Информация о CPU и памяти",               "cpu-z"),
-        ("GPU-Z",               "Информация о видеокарте",                 "gpu-z"),
-        ("HWMonitor",           "Температуры и вольтажи",                  "hwmonitor"),
-        ("Speccy",              "Подробная информация о железе",           "speccy"),
-        ("Chrome",              "Браузер Google Chrome",                   "googlechrome"),
-        ("Firefox",             "Браузер Mozilla Firefox",                 "firefox"),
-        ("Opera",               "Браузер Opera",                           "opera"),
-        ("Edge",                "Браузер Microsoft Edge",                  "microsoft-edge"),
-        ("qBittorrent",         "Торрент-клиент",                          "qbittorrent"),
-    ]),
-]
-
-# ==============================================================
-#                    НАСТРОЙКИ CHOCO
-# ==============================================================
 CHOCO_CACHE_DIR = r"C:\ChocolateyCache"
 
 
+# ==============================================================
+#                    МЕНЕДЖЕР ОЧЕРЕДИ ЗАДАЧ
+# ==============================================================
+class TaskManager:
+    def __init__(self, root, status_label, progress_bar, list_frame):
+        self.root = root
+        self.status_label = status_label
+        self.progress_bar = progress_bar
+        self.list_frame = list_frame
+        self.queue = queue.Queue()
+        self.is_running = False
+
+        # Запускаем фоновый обработчик очереди
+        threading.Thread(target=self._process_queue, daemon=True).start()
+
+    def add_task(
+        self, app_name, package, winget_package, snap_package, is_snap_classic
+    ):
+        # Создаем визуальную плашку задачи
+        lbl = tk.Label(
+            self.list_frame,
+            text=f"⏸ {app_name} — Ожидание",
+            font=("Segoe UI", 9),
+            bg=BG_PANEL,
+            fg=FG_MUTED,
+            anchor="w",
+        )
+        lbl.pack(fill="x", pady=2)
+
+        # Кладем в очередь
+        self.queue.put(
+            (app_name, package, winget_package, snap_package, is_snap_classic, lbl)
+        )
+
+    def _process_queue(self):
+        while True:
+            app_name, package, winget_package, snap_package, is_snap_classic, lbl = (
+                self.queue.get()
+            )
+
+            # Меняем статус в UI на "Установка"
+            self.root.after(
+                0,
+                lambda l=lbl, n=app_name: l.config(
+                    text=f"⚙️ {n} — Установка...", fg=ACCENT
+                ),
+            )
+
+            try:
+                # Формируем маппинг для Snap (кортеж из имени и флага)
+                snap_map = {}
+                if snap_package:
+                    snap_map[package] = (snap_package, is_snap_classic)
+
+                # Запускаем установку и ЖДЕМ её завершения
+                thread = install(
+                    action="install",
+                    ttk_log_widget=self.status_label,
+                    ttk_progress_bar=self.progress_bar,
+                    packages=[package],
+                    args=["-y"],
+                    winget_mapping={package: winget_package} if winget_package else {},
+                    snap_mapping=snap_map,
+                )
+                if thread:
+                    thread.join()  # Ждем, пока поток установки завершится
+
+                # Проверяем, упало ли (по тексту статуса)
+                current_status = self.status_label.cget("text")
+                if (
+                    "ошибок: 0" in current_status
+                    or "успешно" in current_status.lower()
+                    or "Snap завершен. Успешно: 1" in current_status
+                ):
+                    self.root.after(
+                        0,
+                        lambda l=lbl, n=app_name: l.config(
+                            text=f"✅ {n} — Готово", fg=SUCCESS
+                        ),
+                    )
+                else:
+                    self.root.after(
+                        0,
+                        lambda l=lbl, n=app_name: l.config(
+                            text=f"❌ {n} — Ошибка", fg=DANGER
+                        ),
+                    )
+            except Exception as e:
+                logger.error(f"Ошибка в очереди: {e}")
+                self.root.after(
+                    0,
+                    lambda l=lbl, n=app_name: l.config(
+                        text=f"❌ {n} — Ошибка", fg=DANGER
+                    ),
+                )
+
+            self.queue.task_done()
+
+
+# ==============================================================
+#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+# ==============================================================
+def _get_os():
+    if sys.platform == "win32":
+        return "windows"
+    elif sys.platform.startswith("linux"):
+        return "linux"
+    return "unknown"
+
+
 def _configure_choco_cache():
-    """Устанавливает папку кэша Chocolatey. Требует прав администратора."""
-    import subprocess
+    if _get_os() != "windows":
+        return
     import os
-    import sys
 
-    CREATE_NO_WINDOW = 0x08000000 if sys.platform == "win32" else 0
-
+    CREATE_NO_WINDOW = 0x08000000
     try:
         os.makedirs(CHOCO_CACHE_DIR, exist_ok=True)
     except OSError:
-        pass  # если не удалось создать — choco ругнётся сам
-
+        pass
     choco_path = r"C:\ProgramData\chocolatey\bin\choco.exe"
     if not os.path.exists(choco_path):
-        choco_path = "choco"  # fallback на PATH
-
+        choco_path = "choco"
     cmd = [choco_path, "config", "set", "cacheLocation", CHOCO_CACHE_DIR]
-
     try:
         subprocess.run(
             cmd,
@@ -174,27 +176,60 @@ def _configure_choco_cache():
             timeout=15,
         )
     except Exception:
-        pass  # тихо игнорируем — не критично для работы UI
+        pass
 
-# ==============================================================
-#                    ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-# ==============================================================
+
+def _parse_catalog():
+    """Парсит встроенный каталог из Python-файла."""
+    os_type = _get_os()
+
+    if os_type == "windows":
+        pkg_key = "choco"
+        winget_key = "winget"
+        snap_key = None
+    elif os_type == "linux":
+        pkg_key = "apt"
+        winget_key = None
+        snap_key = "snap"
+    else:
+        pkg_key = "choco"
+        winget_key = "winget"
+        snap_key = None
+
+    groups = {}
+    for item in CATALOG:
+        cat = item["category"]
+        pkg = item.get(pkg_key, "").strip()
+
+        if not pkg:
+            continue
+
+        winget_pkg = item.get(winget_key, "").strip() if winget_key else ""
+        snap_pkg = item.get(snap_key, "").strip() if snap_key else ""
+        is_snap_classic = item.get("snap_classic", False)
+
+        if cat not in groups:
+            groups[cat] = []
+
+        groups[cat].append(
+            (item["name"], item["desc"], pkg, winget_pkg, snap_pkg, is_snap_classic)
+        )
+
+    return groups
+
+
 def _make_scrollable(parent: tk.Widget) -> tk.Frame:
-    """Canvas + Scrollbar + возвращает вложенный Frame для карточек."""
     container = tk.Frame(parent, bg=BG_ROOT)
     container.pack(fill="both", expand=True)
-
     canvas = tk.Canvas(container, bg=BG_ROOT, highlightthickness=0, bd=0)
     scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
     inner = tk.Frame(canvas, bg=BG_ROOT)
 
     inner.bind(
-        "<Configure>",
-        lambda e: canvas.configure(scrollregion=canvas.bbox("all")),
+        "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
     )
     window_id = canvas.create_window((0, 0), window=inner, anchor="nw")
     canvas.configure(yscrollcommand=scrollbar.set)
-
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
 
@@ -216,14 +251,12 @@ def _make_card(
     col,
     title,
     desc,
-    package=None,
-    status_label=None,
-    progress_bar=None,
-    action="install",
-    packages=None,
-    button_text="Установить",
+    package,
+    winget_package,
+    snap_package,
+    is_snap_classic,
+    task_manager,
 ):
-    """Универсальная карточка с заголовком, описанием и кнопкой действия."""
     card = tk.Frame(
         parent,
         bg=BG_CARD,
@@ -232,15 +265,14 @@ def _make_card(
         highlightbackground=BORDER,
         highlightthickness=1,
     )
-    card.grid(row=row, column=col, padx=8, pady=8, sticky="nsew")
+    card.grid(row=row, column=col, padx=10, pady=10, sticky="nsew")
 
     header = tk.Frame(card, bg=BG_CARD)
     header.pack(fill="x")
-
     tk.Label(
         header,
         text=title,
-        font=("Segoe UI Semibold", 12),
+        font=("Segoe UI Semibold", 13),
         bg=BG_CARD,
         fg=FG_TITLE,
         anchor="w",
@@ -252,37 +284,30 @@ def _make_card(
         font=("Segoe UI", 9),
         bg=BG_CARD,
         fg=FG_MUTED,
-        wraplength=240,
+        wraplength=250,
         justify="left",
         anchor="w",
-    ).pack(fill="x", pady=(6, 14))
+    ).pack(fill="x", pady=(8, 16))
 
-    pkg_list = packages if packages is not None else ([package] if package else [])
-    args = ["-y"] if action == "install" else []
-
-    ttk.Button(
+    btn = ttk.Button(
         card,
-        text=button_text,
+        text="Установить",
         style="Accent.TButton",
-        command=lambda a=action, p=pkg_list: install(
-            action=a,
-            ttk_log_widget=status_label,
-            ttk_progress_bar=progress_bar,
-            packages=p,
-            args=args,
+        command=lambda n=title, p=package, w=winget_package, s=snap_package, c=is_snap_classic: task_manager.add_task(
+            n, p, w, s, c
         ),
-    ).pack(fill="x")
+    )
+    btn.pack(fill="x", side="bottom")
 
     def on_enter(_):
-        card.configure(bg=BG_CARD_HOVER)
-        for w in (card, header):
-            w.configure(bg=BG_CARD_HOVER)
+        card.configure(bg=BG_CARD_HOVER, highlightbackground=ACCENT_DARK)
+        header.configure(bg=BG_CARD_HOVER)
         for w in card.winfo_children():
             if isinstance(w, tk.Label):
                 w.configure(bg=BG_CARD_HOVER)
 
     def on_leave(_):
-        card.configure(bg=BG_CARD)
+        card.configure(bg=BG_CARD, highlightbackground=BORDER)
         header.configure(bg=BG_CARD)
         for w in card.winfo_children():
             if isinstance(w, tk.Label):
@@ -293,45 +318,44 @@ def _make_card(
     return card
 
 
-def _make_section(parent, title, apps, status_label, progress_bar, columns=4):
-    """Секция с заголовком и сеткой карточек."""
+def _make_section(parent, title, apps, task_manager, columns=4):
     header = tk.Frame(parent, bg=BG_ROOT)
-    header.pack(fill="x", pady=(20, 4), padx=6)
+    header.pack(fill="x", pady=(20, 4), padx=8)
     tk.Label(
-        header, text=title,
-        font=("Segoe UI Semibold", 13),
-        bg=BG_ROOT, fg=ACCENT, anchor="w",
+        header,
+        text=title,
+        font=("Segoe UI Semibold", 15),
+        bg=BG_ROOT,
+        fg=ACCENT,
+        anchor="w",
     ).pack(side="left")
     tk.Label(
-        header, text=f"  {len(apps)} шт.",
-        font=("Segoe UI", 9),
-        bg=BG_ROOT, fg=FG_DIM, anchor="w",
+        header,
+        text=f"  {len(apps)} шт.",
+        font=("Segoe UI", 10),
+        bg=BG_ROOT,
+        fg=FG_DIM,
+        anchor="w",
     ).pack(side="left", pady=(4, 0))
 
-    tk.Frame(parent, bg=BORDER, height=1).pack(fill="x", padx=6, pady=(0, 10))
-
+    tk.Frame(parent, bg=BORDER, height=1).pack(fill="x", padx=8, pady=(0, 12))
     grid = tk.Frame(parent, bg=BG_ROOT)
-    grid.pack(fill="x", padx=2)
+    grid.pack(fill="x", padx=8)
 
-    for i, (t, d, pkg) in enumerate(apps):
+    # Распаковываем 6 элементов
+    for i, (t, d, pkg, winget_pkg, snap_pkg, is_snap_classic) in enumerate(apps):
         r, c = divmod(i, columns)
         _make_card(
-            parent=grid, row=r, col=c,
-            title=t, desc=d, package=pkg,
-            status_label=status_label, progress_bar=progress_bar,
+            grid, r, c, t, d, pkg, winget_pkg, snap_pkg, is_snap_classic, task_manager
         )
 
     for i in range(columns):
         grid.columnconfigure(i, weight=1, uniform=f"sect{title}")
 
 
-# ==============================================================
-#                    СТИЛИЗАЦИЯ ttk
-# ==============================================================
 def _setup_styles():
     style = ttk.Style()
     style.theme_use("clam")
-
     style.configure(
         "TNotebook", background=BG_ROOT, borderwidth=0, tabmargins=(8, 6, 8, 0)
     )
@@ -349,12 +373,10 @@ def _setup_styles():
         foreground=[("selected", ACCENT)],
         expand=[("selected", (0, 0, 0, 0))],
     )
-
     style.configure("TFrame", background=BG_ROOT)
     style.configure(
         "TLabel", background=BG_ROOT, foreground=FG_TEXT, font=("Segoe UI", 10)
     )
-
     style.configure(
         "TButton",
         background=BG_CARD,
@@ -369,7 +391,6 @@ def _setup_styles():
         background=[("active", BG_CARD_HOVER), ("pressed", BG_INPUT)],
         foreground=[("active", FG_TITLE)],
     )
-
     style.configure(
         "Accent.TButton",
         background=ACCENT_DARK,
@@ -384,7 +405,6 @@ def _setup_styles():
         background=[("active", ACCENT), ("pressed", ACCENT_DARK)],
         foreground=[("active", "#ffffff")],
     )
-
     style.configure(
         "Danger.TButton",
         background=BG_CARD,
@@ -399,7 +419,6 @@ def _setup_styles():
         background=[("active", BG_CARD_HOVER)],
         foreground=[("active", DANGER_HOVER)],
     )
-
     style.configure(
         "Accent.Horizontal.TProgressbar",
         troughcolor=BG_INPUT,
@@ -409,7 +428,6 @@ def _setup_styles():
         darkcolor=ACCENT,
         thickness=8,
     )
-
     style.configure(
         "Vertical.TScrollbar",
         background=BG_PANEL,
@@ -418,10 +436,7 @@ def _setup_styles():
         arrowcolor=FG_MUTED,
         gripcount=0,
     )
-    style.map(
-        "Vertical.TScrollbar",
-        background=[("active", BG_CARD_HOVER)],
-    )
+    style.map("Vertical.TScrollbar", background=[("active", BG_CARD_HOVER)])
 
 
 # ==============================================================
@@ -433,8 +448,8 @@ def start():
 
     root = tk.Tk()
     root.title(APP_NAME)
-    root.geometry("1120x680")
-    root.minsize(900, 560)
+    root.geometry("1280x850")
+    root.minsize(1000, 700)
     root.configure(bg=BG_ROOT)
     root.eval("tk::PlaceWindow . center")
 
@@ -442,122 +457,102 @@ def start():
 
     # --- ВЕРХНЯЯ ПАНЕЛЬ ---
     top_frame = tk.Frame(root, bg=BG_ROOT)
-    top_frame.pack(fill="x", padx=28, pady=(20, 6))
-
+    top_frame.pack(fill="x", padx=28, pady=(20, 10))
     tk.Label(
-        top_frame, text="◆",
-        font=("Segoe UI", 22, "bold"),
-        bg=BG_ROOT, fg=ACCENT,
+        top_frame, text="◆", font=("Segoe UI", 22, "bold"), bg=BG_ROOT, fg=ACCENT
     ).pack(side="left")
-
     title_block = tk.Frame(top_frame, bg=BG_ROOT)
     title_block.pack(side="left", padx=(10, 0))
-
     tk.Label(
-        title_block, text=APP_NAME,
+        title_block,
+        text=APP_NAME,
         font=("Segoe UI Semibold", 18),
-        bg=BG_ROOT, fg=FG_TITLE, anchor="w",
+        bg=BG_ROOT,
+        fg=FG_TITLE,
+        anchor="w",
     ).pack(anchor="w")
     tk.Label(
-        title_block, text=APP_TAGLINE,
+        title_block,
+        text=APP_TAGLINE,
         font=("Segoe UI", 9),
-        bg=BG_ROOT, fg=FG_MUTED, anchor="w",
+        bg=BG_ROOT,
+        fg=FG_MUTED,
+        anchor="w",
     ).pack(anchor="w")
-
     tk.Label(
-        top_frame, text="  ADMIN  ",
+        top_frame,
+        text="  ADMIN  ",
         font=("Segoe UI Semibold", 8),
-        bg=BG_CARD, fg=ACCENT, padx=6, pady=4,
+        bg=BG_CARD,
+        fg=ACCENT,
+        padx=6,
+        pady=4,
     ).pack(side="right", pady=8)
 
     tk.Frame(root, bg=BORDER, height=1).pack(fill="x", padx=28, pady=(6, 0))
 
-    # --- НИЖНЯЯ ПАНЕЛЬ (создаём заранее) ---
+    # --- НИЖНЯЯ ПАНЕЛЬ (ОЧЕРЕДЬ И СТАТУС) ---
     bottom_frame = tk.Frame(root, bg=BG_PANEL)
 
-    status_container = tk.Frame(bottom_frame, bg=BG_PANEL)
-    status_container.pack(fill="x", padx=24, pady=(12, 0))
-
+    # 1. Список задач
+    task_container = tk.Frame(bottom_frame, bg=BG_PANEL)
+    task_container.pack(fill="x", padx=24, pady=(10, 5))
     tk.Label(
-        status_container, text="СТАТУС",
+        task_container,
+        text="ОЧЕРЕДЬ ЗАДАЧ",
         font=("Segoe UI Semibold", 8),
-        bg=BG_PANEL, fg=FG_DIM,
+        bg=BG_PANEL,
+        fg=FG_DIM,
     ).pack(anchor="w")
 
+    task_list_frame = tk.Frame(task_container, bg=BG_PANEL)
+    task_list_frame.pack(fill="x", pady=2)
+
+    # 2. Текущий статус
+    status_container = tk.Frame(bottom_frame, bg=BG_PANEL)
+    status_container.pack(fill="x", padx=24, pady=(5, 0))
     status_label = tk.Label(
         status_container,
-        text="Система готова. Выберите действие.",
+        text="Система готова.",
         font=("Consolas", 10),
-        bg=BG_PANEL, fg=FG_TEXT,
-        anchor="w", justify="left",
+        bg=BG_PANEL,
+        fg=FG_TEXT,
+        anchor="w",
+        justify="left",
     )
     status_label.pack(fill="x", pady=(2, 8))
 
+    # 3. Прогресс-бар
     progress_bar = ttk.Progressbar(
-        bottom_frame, orient="horizontal",
-        mode="determinate", style="Accent.Horizontal.TProgressbar",
+        bottom_frame,
+        orient="horizontal",
+        mode="determinate",
+        style="Accent.Horizontal.TProgressbar",
     )
     progress_bar.pack(fill="x", padx=24, pady=(0, 10))
 
-    # --- NOTEBOOK ---
+    # Инициализируем менеджер задач
+    task_manager = TaskManager(root, status_label, progress_bar, task_list_frame)
+
+    # --- ОСНОВНОЙ КОНТЕНТ ---
     notebook = ttk.Notebook(root)
     notebook.pack(fill="both", expand=True, padx=22, pady=(14, 6))
 
-    # ==========================================================
-    # ВКЛАДКА 1: КАТЕГОРИИ
-    # ==========================================================
-    tab_install = ttk.Frame(notebook)
-    notebook.add(tab_install, text="  Категории  ")
-    scrollable_frame = _make_scrollable(tab_install)
-
-    row, col = 0, 0
-    for cat in CATEGORIES:
-        _make_card(
-            parent=scrollable_frame,
-            row=row,
-            col=col,
-            title=cat["title"],
-            desc=cat["desc"],
-            packages=cat["packages"],
-            action=cat.get("action", "install"),
-            status_label=status_label,
-            progress_bar=progress_bar,
-            button_text=cat.get("button_text", "Выполнить"),
-        )
-        col += 1
-        if col > 2:
-            col = 0
-            row += 1
-
-    for i in range(3):
-        scrollable_frame.columnconfigure(i, weight=1, uniform="cat")
-
-    # ==========================================================
-    # ВКЛАДКА 2: МАРКЕТПЛЕЙС
-    # ==========================================================
     tab_market = ttk.Frame(notebook)
     notebook.add(tab_market, text="  Маркетплейс  ")
     market_frame = _make_scrollable(tab_market)
 
-    for group_title, group_apps in MARKETPLACE_GROUPS:
-        _make_section(
-            parent=market_frame,
-            title=group_title,
-            apps=group_apps,
-            status_label=status_label,
-            progress_bar=progress_bar,
-            columns=4,
-        )
+    catalog_data = _parse_catalog()
+    for cat_name, apps in catalog_data.items():
+        _make_section(market_frame, cat_name, apps, task_manager, columns=4)
 
-    # --- ПАКУЕМ НИЖНЮЮ ПАНЕЛЬ В КОНЦЕ ---
+    # Пакуем нижнюю панель в самом конце
     bottom_frame.pack(fill="x", side="bottom", pady=(0, 0))
 
     ttk.Button(
-        bottom_frame, text="Закрыть", style="Danger.TButton",
-        command=root.destroy,
+        bottom_frame, text="Закрыть", style="Danger.TButton", command=root.destroy
     ).pack(side="right", padx=24, pady=(0, 14))
 
-    # --- ГОРЯЧИЕ КЛАВИШИ ---
     def toggle_fullscreen(event=None):
         root.attributes("-fullscreen", not root.attributes("-fullscreen"))
 
