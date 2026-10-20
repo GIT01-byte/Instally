@@ -1,5 +1,5 @@
 MSYS_NO_PATHCONV=1 ./src/tools/build.sh x86_64 ./src/app/main.py --imports loguru
 
-pyinstaller --onefile --noconsole ./src/app/main.py
+poetry run pyinstaller --onefile --noconsole ./src/app/main.py
 
 SISADMIN_PROGRAMM

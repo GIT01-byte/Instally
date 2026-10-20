@@ -28,6 +28,9 @@ def _check_choco(pkg: str) -> bool:
             creationflags=0x08000000 if sys.platform == "win32" else 0,
         )
         return bool(result.stdout.strip())
+    except subprocess.TimeoutExpired:
+        print("[Timeout] ", end="")
+        return False
     except Exception:
         return False
 
@@ -42,6 +45,9 @@ def _check_apt(pkg: str) -> bool:
             timeout=10,
         )
         return result.returncode == 0
+    except subprocess.TimeoutExpired:
+        print("[Timeout] ", end="")
+        return False
     except Exception:
         return False
 
@@ -57,6 +63,9 @@ def _check_winget(pkg: str) -> bool:
             creationflags=0x08000000 if sys.platform == "win32" else 0,
         )
         return result.returncode == 0
+    except subprocess.TimeoutExpired:
+        print("[Timeout] ", end="")
+        return False
     except Exception:
         return False
 
@@ -71,6 +80,9 @@ def _check_snap(pkg: str) -> bool:
             timeout=15,
         )
         return result.returncode == 0
+    except subprocess.TimeoutExpired:
+        print("[Timeout] ", end="")
+        return False
     except Exception:
         return False
 
@@ -102,6 +114,7 @@ def test_packages_exist():
         name = item["name"]
         pkg_main = item.get(main_key, "").strip()
         pkg_fallback = item.get(fallback_key, "").strip()
+        is_classic = item.get("snap_classic", False)
 
         # Если нет ни основного, ни fallback-кода — пропускаем
         if not pkg_main and not pkg_fallback:
@@ -133,8 +146,13 @@ def test_packages_exist():
                 fallback_ok = _check_snap(pkg_fallback)
 
             if fallback_ok:
-                print(f"⚠️ Найден только в {fallback_name} ({pkg_fallback})")
-                warnings.append((name, pkg_fallback, fallback_name))
+                classic_info = (
+                    " (требует --classic)" if is_classic and os_type == "linux" else ""
+                )
+                print(
+                    f"⚠️ Найден только в {fallback_name} ({pkg_fallback}){classic_info}"
+                )
+                warnings.append((name, pkg_fallback, fallback_name, is_classic))
                 found_in_fallback += 1
                 continue
 
@@ -154,8 +172,9 @@ def test_packages_exist():
 
     if warnings:
         print("\n--- ВНИМАНИЕ! ЭТИ ПАКЕТЫ ЕСТЬ ТОЛЬКО В FALLBACK ---")
-        for name, pkg, source in warnings:
-            print(f"{name} -> {source} ({pkg})")
+        for name, pkg, source, is_classic in warnings:
+            classic_note = " [--classic]" if is_classic else ""
+            print(f"{name} -> {source} ({pkg}){classic_note}")
         print("(При установке основной менеджер упадет, и сработает fallback).")
 
     if missing_packages:

@@ -7,9 +7,8 @@ import threading
 
 from utils.os_handling import get_admin_permisions
 from service.installer import install
+from engines.zipEngine import download_and_extract_zip
 from utils.logging import logger
-
-# Импортируем каталог прямо из Python-файла
 from data.catalog import CATALOG
 
 # ==============================================================
@@ -18,6 +17,9 @@ from data.catalog import CATALOG
 APP_NAME = "Instally"
 APP_TAGLINE = "Избавляет вас от рутины установки программ"
 
+# ==============================================================
+#                    ДИЗАЙН-СИСТЕМА
+# ==============================================================
 BG_ROOT = "#1e1f29"
 BG_PANEL = "#282a36"
 BG_CARD = "#2f313e"
@@ -38,6 +40,28 @@ DANGER = "#ff5555"
 DANGER_HOVER = "#ff6e6e"
 BORDER = "#3a3c4a"
 
+FONT_LOGO = ("Segoe UI", 22, "bold")
+FONT_TITLE = ("Segoe UI Semibold", 18)
+FONT_TAGLINE = ("Segoe UI", 9)
+FONT_BADGE = ("Segoe UI Semibold", 8)
+
+FONT_SECTION = ("Segoe UI Semibold", 15)
+FONT_SECTION_COUNT = ("Segoe UI", 10)
+
+FONT_CARD_TITLE = ("Segoe UI Semibold", 13)
+FONT_CARD_DESC = ("Segoe UI", 9)
+
+FONT_STATUS = ("Consolas", 10)
+FONT_BUTTON = ("Segoe UI Semibold", 10)
+
+PAD_WINDOW_X = 28
+PAD_WINDOW_Y = 20
+PAD_CARD_X = 18
+PAD_CARD_Y = 16
+PAD_CARD_GRID = 10
+PAD_SECTION_X = 8
+PAD_SECTION_Y = 20
+
 CHOCO_CACHE_DIR = r"C:\ChocolateyCache"
 
 
@@ -51,37 +75,50 @@ class TaskManager:
         self.progress_bar = progress_bar
         self.list_frame = list_frame
         self.queue = queue.Queue()
-        self.is_running = False
-
-        # Запускаем фоновый обработчик очереди
         threading.Thread(target=self._process_queue, daemon=True).start()
 
     def add_task(
-        self, app_name, package, winget_package, snap_package, is_snap_classic
+        self,
+        app_name,
+        package,
+        winget_package,
+        snap_package,
+        is_snap_classic,
+        download_url=None,
     ):
-        # Создаем визуальную плашку задачи
         lbl = tk.Label(
             self.list_frame,
             text=f"⏸ {app_name} — Ожидание",
-            font=("Segoe UI", 9),
+            font=FONT_CARD_DESC,
             bg=BG_PANEL,
             fg=FG_MUTED,
             anchor="w",
         )
         lbl.pack(fill="x", pady=2)
-
-        # Кладем в очередь
         self.queue.put(
-            (app_name, package, winget_package, snap_package, is_snap_classic, lbl)
+            (
+                app_name,
+                package,
+                winget_package,
+                snap_package,
+                is_snap_classic,
+                download_url,
+                lbl,
+            )
         )
 
     def _process_queue(self):
         while True:
-            app_name, package, winget_package, snap_package, is_snap_classic, lbl = (
-                self.queue.get()
-            )
+            (
+                app_name,
+                package,
+                winget_package,
+                snap_package,
+                is_snap_classic,
+                download_url,
+                lbl,
+            ) = self.queue.get()
 
-            # Меняем статус в UI на "Установка"
             self.root.after(
                 0,
                 lambda l=lbl, n=app_name: l.config(
@@ -90,31 +127,41 @@ class TaskManager:
             )
 
             try:
-                # Формируем маппинг для Snap (кортеж из имени и флага)
-                snap_map = {}
-                if snap_package:
-                    snap_map[package] = (snap_package, is_snap_classic)
+                # Если есть ссылка на ZIP, скачиваем архив
+                if download_url:
+                    thread = download_and_extract_zip(
+                        url=download_url,
+                        app_name=app_name,
+                        ttk_log_widget=self.status_label,
+                        ttk_progress_bar=self.progress_bar,
+                    )
+                else:
+                    # Иначе используем обычный пакетный менеджер
+                    snap_map = {}
+                    if snap_package:
+                        snap_map[package] = (snap_package, is_snap_classic)
 
-                # Запускаем установку и ЖДЕМ её завершения
-                thread = install(
-                    action="install",
-                    ttk_log_widget=self.status_label,
-                    ttk_progress_bar=self.progress_bar,
-                    packages=[package],
-                    args=["-y"],
-                    winget_mapping={package: winget_package} if winget_package else {},
-                    snap_mapping=snap_map,
-                )
+                    thread = install(
+                        action="install",
+                        ttk_log_widget=self.status_label,
+                        ttk_progress_bar=self.progress_bar,
+                        packages=[package],
+                        args=["-y"],
+                        winget_mapping=(
+                            {package: winget_package} if winget_package else {}
+                        ),
+                        snap_mapping=snap_map,
+                    )
+
                 if thread:
-                    thread.join()  # Ждем, пока поток установки завершится
+                    thread.join()  # Ждем завершения
 
-                # Проверяем, упало ли (по тексту статуса)
-                current_status = self.status_label.cget("text")
-                if (
-                    "ошибок: 0" in current_status
-                    or "успешно" in current_status.lower()
-                    or "Snap завершен. Успешно: 1" in current_status
-                ):
+                # Если ZIP скачался без ошибок, failed_packages в потоке нет
+                failed = getattr(thread, "failed_packages", [])
+
+                # В ZIP-движке при ошибке выбрасывается Exception,
+                # но если поток не упал, статус успешный.
+                if download_url or not failed:
                     self.root.after(
                         0,
                         lambda l=lbl, n=app_name: l.config(
@@ -128,6 +175,7 @@ class TaskManager:
                             text=f"❌ {n} — Ошибка", fg=DANGER
                         ),
                     )
+
             except Exception as e:
                 logger.error(f"Ошибка в очереди: {e}")
                 self.root.after(
@@ -180,28 +228,22 @@ def _configure_choco_cache():
 
 
 def _parse_catalog():
-    """Парсит встроенный каталог из Python-файла."""
     os_type = _get_os()
-
     if os_type == "windows":
-        pkg_key = "choco"
-        winget_key = "winget"
-        snap_key = None
+        pkg_key, winget_key, snap_key = "choco", "winget", None
     elif os_type == "linux":
-        pkg_key = "apt"
-        winget_key = None
-        snap_key = "snap"
+        pkg_key, winget_key, snap_key = "apt", None, "snap"
     else:
-        pkg_key = "choco"
-        winget_key = "winget"
-        snap_key = None
+        pkg_key, winget_key, snap_key = "choco", "winget", None
 
     groups = {}
     for item in CATALOG:
         cat = item["category"]
         pkg = item.get(pkg_key, "").strip()
+        download_url = item.get("download_url", "").strip()
 
-        if not pkg:
+        # Показываем программу, если есть либо код пакета, либо ссылка на ZIP
+        if not pkg and not download_url:
             continue
 
         winget_pkg = item.get(winget_key, "").strip() if winget_key else ""
@@ -212,9 +254,16 @@ def _parse_catalog():
             groups[cat] = []
 
         groups[cat].append(
-            (item["name"], item["desc"], pkg, winget_pkg, snap_pkg, is_snap_classic)
+            (
+                item["name"],
+                item["desc"],
+                pkg,
+                winget_pkg,
+                snap_pkg,
+                is_snap_classic,
+                download_url,
+            )
         )
-
     return groups
 
 
@@ -224,7 +273,6 @@ def _make_scrollable(parent: tk.Widget) -> tk.Frame:
     canvas = tk.Canvas(container, bg=BG_ROOT, highlightthickness=0, bd=0)
     scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
     inner = tk.Frame(canvas, bg=BG_ROOT)
-
     inner.bind(
         "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
     )
@@ -232,16 +280,13 @@ def _make_scrollable(parent: tk.Widget) -> tk.Frame:
     canvas.configure(yscrollcommand=scrollbar.set)
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
-
-    def _on_canvas_configure(event):
-        canvas.itemconfigure(window_id, width=event.width)
-
-    canvas.bind("<Configure>", _on_canvas_configure)
-
-    def _on_mousewheel(event):
-        canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
-
-    canvas.bind_all("<MouseWheel>", _on_mousewheel)
+    canvas.bind(
+        "<Configure>", lambda event: canvas.itemconfigure(window_id, width=event.width)
+    )
+    canvas.bind_all(
+        "<MouseWheel>",
+        lambda event: canvas.yview_scroll(int(-1 * (event.delta / 120)), "units"),
+    )
     return inner
 
 
@@ -255,33 +300,30 @@ def _make_card(
     winget_package,
     snap_package,
     is_snap_classic,
+    download_url,
     task_manager,
 ):
     card = tk.Frame(
         parent,
         bg=BG_CARD,
-        padx=18,
-        pady=16,
+        padx=PAD_CARD_X,
+        pady=PAD_CARD_Y,
         highlightbackground=BORDER,
         highlightthickness=1,
     )
-    card.grid(row=row, column=col, padx=10, pady=10, sticky="nsew")
+    card.grid(
+        row=row, column=col, padx=PAD_CARD_GRID, pady=PAD_CARD_GRID, sticky="nsew"
+    )
 
     header = tk.Frame(card, bg=BG_CARD)
     header.pack(fill="x")
     tk.Label(
-        header,
-        text=title,
-        font=("Segoe UI Semibold", 13),
-        bg=BG_CARD,
-        fg=FG_TITLE,
-        anchor="w",
+        header, text=title, font=FONT_CARD_TITLE, bg=BG_CARD, fg=FG_TITLE, anchor="w"
     ).pack(side="left")
-
     tk.Label(
         card,
         text=desc,
-        font=("Segoe UI", 9),
+        font=FONT_CARD_DESC,
         bg=BG_CARD,
         fg=FG_MUTED,
         wraplength=250,
@@ -289,12 +331,15 @@ def _make_card(
         anchor="w",
     ).pack(fill="x", pady=(8, 16))
 
+    # Если есть download_url, меняем текст кнопки
+    btn_text = "Скачать ZIP" if download_url else "Установить"
+
     btn = ttk.Button(
         card,
-        text="Установить",
+        text=btn_text,
         style="Accent.TButton",
-        command=lambda n=title, p=package, w=winget_package, s=snap_package, c=is_snap_classic: task_manager.add_task(
-            n, p, w, s, c
+        command=lambda n=title, p=package, w=winget_package, s=snap_package, c=is_snap_classic, u=download_url: task_manager.add_task(
+            n, p, w, s, c, u
         ),
     )
     btn.pack(fill="x", side="bottom")
@@ -320,33 +365,47 @@ def _make_card(
 
 def _make_section(parent, title, apps, task_manager, columns=4):
     header = tk.Frame(parent, bg=BG_ROOT)
-    header.pack(fill="x", pady=(20, 4), padx=8)
+    header.pack(fill="x", pady=(PAD_SECTION_Y, 4), padx=PAD_SECTION_X)
     tk.Label(
-        header,
-        text=title,
-        font=("Segoe UI Semibold", 15),
-        bg=BG_ROOT,
-        fg=ACCENT,
-        anchor="w",
+        header, text=title, font=FONT_SECTION, bg=BG_ROOT, fg=ACCENT, anchor="w"
     ).pack(side="left")
     tk.Label(
         header,
         text=f"  {len(apps)} шт.",
-        font=("Segoe UI", 10),
+        font=FONT_SECTION_COUNT,
         bg=BG_ROOT,
         fg=FG_DIM,
         anchor="w",
     ).pack(side="left", pady=(4, 0))
 
-    tk.Frame(parent, bg=BORDER, height=1).pack(fill="x", padx=8, pady=(0, 12))
+    tk.Frame(parent, bg=BORDER, height=1).pack(
+        fill="x", padx=PAD_SECTION_X, pady=(0, 12)
+    )
     grid = tk.Frame(parent, bg=BG_ROOT)
-    grid.pack(fill="x", padx=8)
+    grid.pack(fill="x", padx=PAD_SECTION_X)
 
-    # Распаковываем 6 элементов
-    for i, (t, d, pkg, winget_pkg, snap_pkg, is_snap_classic) in enumerate(apps):
+    for i, (
+        t,
+        d,
+        pkg,
+        winget_pkg,
+        snap_pkg,
+        is_snap_classic,
+        download_url,
+    ) in enumerate(apps):
         r, c = divmod(i, columns)
         _make_card(
-            grid, r, c, t, d, pkg, winget_pkg, snap_pkg, is_snap_classic, task_manager
+            grid,
+            r,
+            c,
+            t,
+            d,
+            pkg,
+            winget_pkg,
+            snap_pkg,
+            is_snap_classic,
+            download_url,
+            task_manager,
         )
 
     for i in range(columns):
@@ -365,7 +424,7 @@ def _setup_styles():
         foreground=FG_MUTED,
         padding=[16, 9],
         borderwidth=0,
-        font=("Segoe UI Semibold", 10),
+        font=FONT_BUTTON,
     )
     style.map(
         "TNotebook.Tab",
@@ -375,7 +434,7 @@ def _setup_styles():
     )
     style.configure("TFrame", background=BG_ROOT)
     style.configure(
-        "TLabel", background=BG_ROOT, foreground=FG_TEXT, font=("Segoe UI", 10)
+        "TLabel", background=BG_ROOT, foreground=FG_TEXT, font=FONT_SECTION_COUNT
     )
     style.configure(
         "TButton",
@@ -384,7 +443,7 @@ def _setup_styles():
         borderwidth=0,
         focusthickness=0,
         padding=(12, 8),
-        font=("Segoe UI Semibold", 10),
+        font=FONT_BUTTON,
     )
     style.map(
         "TButton",
@@ -398,7 +457,7 @@ def _setup_styles():
         borderwidth=0,
         focusthickness=0,
         padding=(12, 9),
-        font=("Segoe UI Semibold", 10),
+        font=FONT_BUTTON,
     )
     style.map(
         "Accent.TButton",
@@ -412,7 +471,7 @@ def _setup_styles():
         borderwidth=0,
         focusthickness=0,
         padding=(14, 8),
-        font=("Segoe UI Semibold", 10),
+        font=FONT_BUTTON,
     )
     style.map(
         "Danger.TButton",
@@ -455,26 +514,20 @@ def start():
 
     _setup_styles()
 
-    # --- ВЕРХНЯЯ ПАНЕЛЬ ---
     top_frame = tk.Frame(root, bg=BG_ROOT)
-    top_frame.pack(fill="x", padx=28, pady=(20, 10))
-    tk.Label(
-        top_frame, text="◆", font=("Segoe UI", 22, "bold"), bg=BG_ROOT, fg=ACCENT
-    ).pack(side="left")
+    top_frame.pack(fill="x", padx=PAD_WINDOW_X, pady=(PAD_WINDOW_Y, 10))
+    tk.Label(top_frame, text="◆", font=FONT_LOGO, bg=BG_ROOT, fg=ACCENT).pack(
+        side="left"
+    )
     title_block = tk.Frame(top_frame, bg=BG_ROOT)
     title_block.pack(side="left", padx=(10, 0))
     tk.Label(
-        title_block,
-        text=APP_NAME,
-        font=("Segoe UI Semibold", 18),
-        bg=BG_ROOT,
-        fg=FG_TITLE,
-        anchor="w",
+        title_block, text=APP_NAME, font=FONT_TITLE, bg=BG_ROOT, fg=FG_TITLE, anchor="w"
     ).pack(anchor="w")
     tk.Label(
         title_block,
         text=APP_TAGLINE,
-        font=("Segoe UI", 9),
+        font=FONT_TAGLINE,
         bg=BG_ROOT,
         fg=FG_MUTED,
         anchor="w",
@@ -482,39 +535,30 @@ def start():
     tk.Label(
         top_frame,
         text="  ADMIN  ",
-        font=("Segoe UI Semibold", 8),
+        font=FONT_BADGE,
         bg=BG_CARD,
         fg=ACCENT,
         padx=6,
         pady=4,
     ).pack(side="right", pady=8)
 
-    tk.Frame(root, bg=BORDER, height=1).pack(fill="x", padx=28, pady=(6, 0))
+    tk.Frame(root, bg=BORDER, height=1).pack(fill="x", padx=PAD_WINDOW_X, pady=(6, 0))
 
-    # --- НИЖНЯЯ ПАНЕЛЬ (ОЧЕРЕДЬ И СТАТУС) ---
     bottom_frame = tk.Frame(root, bg=BG_PANEL)
-
-    # 1. Список задач
     task_container = tk.Frame(bottom_frame, bg=BG_PANEL)
-    task_container.pack(fill="x", padx=24, pady=(10, 5))
+    task_container.pack(fill="x", padx=PAD_WINDOW_X - 4, pady=(10, 5))
     tk.Label(
-        task_container,
-        text="ОЧЕРЕДЬ ЗАДАЧ",
-        font=("Segoe UI Semibold", 8),
-        bg=BG_PANEL,
-        fg=FG_DIM,
+        task_container, text="ОЧЕРЕДЬ ЗАДАЧ", font=FONT_BADGE, bg=BG_PANEL, fg=FG_DIM
     ).pack(anchor="w")
-
     task_list_frame = tk.Frame(task_container, bg=BG_PANEL)
     task_list_frame.pack(fill="x", pady=2)
 
-    # 2. Текущий статус
     status_container = tk.Frame(bottom_frame, bg=BG_PANEL)
-    status_container.pack(fill="x", padx=24, pady=(5, 0))
+    status_container.pack(fill="x", padx=PAD_WINDOW_X - 4, pady=(5, 0))
     status_label = tk.Label(
         status_container,
         text="Система готова.",
-        font=("Consolas", 10),
+        font=FONT_STATUS,
         bg=BG_PANEL,
         fg=FG_TEXT,
         anchor="w",
@@ -522,22 +566,18 @@ def start():
     )
     status_label.pack(fill="x", pady=(2, 8))
 
-    # 3. Прогресс-бар
     progress_bar = ttk.Progressbar(
         bottom_frame,
         orient="horizontal",
         mode="determinate",
         style="Accent.Horizontal.TProgressbar",
     )
-    progress_bar.pack(fill="x", padx=24, pady=(0, 10))
+    progress_bar.pack(fill="x", padx=PAD_WINDOW_X - 4, pady=(0, 10))
 
-    # Инициализируем менеджер задач
     task_manager = TaskManager(root, status_label, progress_bar, task_list_frame)
 
-    # --- ОСНОВНОЙ КОНТЕНТ ---
     notebook = ttk.Notebook(root)
     notebook.pack(fill="both", expand=True, padx=22, pady=(14, 6))
-
     tab_market = ttk.Frame(notebook)
     notebook.add(tab_market, text="  Маркетплейс  ")
     market_frame = _make_scrollable(tab_market)
@@ -546,12 +586,10 @@ def start():
     for cat_name, apps in catalog_data.items():
         _make_section(market_frame, cat_name, apps, task_manager, columns=4)
 
-    # Пакуем нижнюю панель в самом конце
     bottom_frame.pack(fill="x", side="bottom", pady=(0, 0))
-
     ttk.Button(
         bottom_frame, text="Закрыть", style="Danger.TButton", command=root.destroy
-    ).pack(side="right", padx=24, pady=(0, 14))
+    ).pack(side="right", padx=PAD_WINDOW_X - 4, pady=(0, 14))
 
     def toggle_fullscreen(event=None):
         root.attributes("-fullscreen", not root.attributes("-fullscreen"))

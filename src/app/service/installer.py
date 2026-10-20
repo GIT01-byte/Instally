@@ -9,7 +9,7 @@ import platform
 import threading
 import shutil
 from tkinter import Label, ttk
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional
 
 
 def _detect_engine() -> str:
@@ -84,6 +84,10 @@ def install(
         from engines.wingetEngine import winget_install
 
         def chain_worker():
+            # Ссылка на текущий поток, чтобы сохранить в него финальный статус
+            current_thread = threading.current_thread()
+            current_thread.failed_packages = []
+
             pkgs = list(packages) if packages else []
             if not pkgs:
                 return
@@ -135,6 +139,11 @@ def install(
             if hasattr(winget_thread, "join"):
                 winget_thread.join()
 
+            # 5. Сохраняем финальный результат от Winget в наш поток
+            current_thread.failed_packages = getattr(
+                winget_thread, "failed_packages", []
+            )
+
         chain_thread = threading.Thread(
             target=chain_worker, daemon=True, name="ChainWorker"
         )
@@ -149,6 +158,10 @@ def install(
         from engines.snapEngine import snap_install
 
         def apt_chain_worker():
+            # Ссылка на текущий поток
+            current_thread = threading.current_thread()
+            current_thread.failed_packages = []
+
             pkgs = list(packages) if packages else []
             if not pkgs:
                 return
@@ -214,6 +227,9 @@ def install(
             if hasattr(snap_thread, "join"):
                 snap_thread.join()
 
+            # 5. Сохраняем финальный результат от Snap в наш поток
+            current_thread.failed_packages = getattr(snap_thread, "failed_packages", [])
+
         chain_thread = threading.Thread(
             target=apt_chain_worker, daemon=True, name="AptSnapWorker"
         )
@@ -272,6 +288,7 @@ def install(
     )
 
     dummy_thread = threading.Thread(target=lambda: None, daemon=True)
+    dummy_thread.failed_packages = packages or []  # Помечаем как ошибку
     dummy_thread.start()
     return dummy_thread
 
