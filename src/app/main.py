@@ -1,15 +1,19 @@
+import core.config
 import tkinter as tk
 from tkinter import ttk
 import sys
 import subprocess
 import queue
 import threading
+import os
 
 from utils.os_handling import get_admin_permisions
 from service.installer import install
+
 from engines.zipEngine import download_and_extract_zip
 from utils.logging import logger
 from data.catalog import CATALOG
+from core.config import BASE_DIR
 
 # ==============================================================
 #                    НАСТРОЙКИ ПРИЛОЖЕНИЯ
@@ -156,11 +160,9 @@ class TaskManager:
                 if thread:
                     thread.join()  # Ждем завершения
 
-                # Если ZIP скачался без ошибок, failed_packages в потоке нет
+                # Получаем список упавших пакетов
                 failed = getattr(thread, "failed_packages", [])
 
-                # В ZIP-движке при ошибке выбрасывается Exception,
-                # но если поток не упал, статус успешный.
                 if download_url or not failed:
                     self.root.after(
                         0,
@@ -202,8 +204,6 @@ def _get_os():
 def _configure_choco_cache():
     if _get_os() != "windows":
         return
-    import os
-
     CREATE_NO_WINDOW = 0x08000000
     try:
         os.makedirs(CHOCO_CACHE_DIR, exist_ok=True)
@@ -242,7 +242,6 @@ def _parse_catalog():
         pkg = item.get(pkg_key, "").strip()
         download_url = item.get("download_url", "").strip()
 
-        # Показываем программу, если есть либо код пакета, либо ссылка на ZIP
         if not pkg and not download_url:
             continue
 
@@ -331,7 +330,6 @@ def _make_card(
         anchor="w",
     ).pack(fill="x", pady=(8, 16))
 
-    # Если есть download_url, меняем текст кнопки
     btn_text = "Скачать ZIP" if download_url else "Установить"
 
     btn = ttk.Button(
@@ -498,15 +496,46 @@ def _setup_styles():
     style.map("Vertical.TScrollbar", background=[("active", BG_CARD_HOVER)])
 
 
+def _set_app_icon(root):
+    """Устанавливает иконку для окна Tkinter."""
+
+    if getattr(sys, "frozen", False):
+        # Для .exe: иконка лежит в корне временной папки (благодаря spec)
+        icon_path = os.path.join(sys._MEIPASS, "icon.ico")
+    else:
+        # Для исходников: поднимаемся из src/app/ на уровень выше в src/
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        icon_path = os.path.join(base_path, "icon.ico")
+
+    try:
+        if os.path.exists(icon_path):
+            root.iconbitmap(bitmap=icon_path)
+        else:
+            print(f"[WARN] Иконка не найдена по пути: {icon_path}")
+    except Exception as e:
+        print(f"[ERROR] Не удалось установить иконку окна: {e}")
+
+
+def _set_windows_app_id():
+    """Заставляет Windows использовать иконку приложения для панели задач."""
+    if sys.platform == "win32":
+        import ctypes
+
+        myappid = "mycompany.instally.app.1"
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
+
 # ==============================================================
 #                    ГЛАВНАЯ ФУНКЦИЯ
 # ==============================================================
 def start():
     get_admin_permisions()
     _configure_choco_cache()
+    _set_windows_app_id()
 
     root = tk.Tk()
     root.title(APP_NAME)
+    _set_app_icon(root)
     root.geometry("1280x850")
     root.minsize(1000, 700)
     root.configure(bg=BG_ROOT)
