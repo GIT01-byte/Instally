@@ -73,9 +73,14 @@ def choco_install(
         r"The remote server returned an error",
     ]
 
+    # Паттерн для определения, что пакет уже установлен (ДОБАВЛЕНО)
+    already_pats = [r"already installed"]
+
     def worker():
         total = len(packages_list)
         choco_thread.failed_packages = []
+        choco_thread.already_installed = []  # <--- Сохраняем список "уже установленных"
+
         if total == 0:
             return
 
@@ -100,6 +105,7 @@ def choco_install(
 
         success_count = 0
         fail_count = 0
+        already_count = 0
 
         for i, package in enumerate(packages_list, start=1):
             cmd = [choco_exe, action, package] + choco_args_list
@@ -113,17 +119,21 @@ def choco_install(
                 package_total=total,
                 progress_regex=r"(\d+)\s*%",
                 error_patterns=error_pats,
+                already_installed_patterns=already_pats,  # <--- Передаем паттерн
             )
 
             if rc in (0, 3010):
                 success_count += 1
+            elif rc == -2:  # <--- Обрабатываем код "Уже установлено"
+                already_count += 1
+                choco_thread.already_installed.append(package)
             else:
                 fail_count += 1
                 choco_thread.failed_packages.append(package)
 
             ttk_progress_bar.after(0, lambda i=i: ttk_progress_bar.config(value=i))
 
-        summary = f"Готово. Успешно: {success_count}, ошибок: {fail_count} из {total}."
+        summary = f"Готово. Установлено: {success_count}, уже было: {already_count}, ошибок: {fail_count}."
         logger.info(summary)
         ttk_log_widget.after(0, lambda s=summary: ttk_log_widget.config(text=s))
 

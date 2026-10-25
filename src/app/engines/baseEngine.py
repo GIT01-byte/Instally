@@ -51,6 +51,7 @@ class InstallEngine:
         package_total: int = 1,
         progress_regex: str = r"(\d+)\s*%",
         error_patterns: List[str] = None,
+        already_installed_patterns: List[str] = None,  # <--- ДОБАВЛЕНО
         env: Dict[str, str] = None,
     ) -> int:
         """Запускает процесс, парсит вывод и возвращает код возврата."""
@@ -94,8 +95,15 @@ class InstallEngine:
                 if error_patterns
                 else []
             )
+            compiled_already = (
+                [re.compile(p, re.IGNORECASE) for p in already_installed_patterns]
+                if already_installed_patterns
+                else []
+            )
+
             last_activity = time.time()
             has_custom_error = False
+            is_already_installed = False  # <--- Флаг "Уже установлено"
 
             while True:
                 try:
@@ -115,7 +123,21 @@ class InstallEngine:
                         if not cleaned_line:
                             continue
 
-                    # Проверка на кастомные ошибки (например, 404 от choco)
+                    # 1. Проверка "Уже установлено" (ДОБАВЛЕНО)
+                    if compiled_already and any(
+                        p.search(cleaned_line) for p in compiled_already
+                    ):
+                        is_already_installed = True
+                        logger.info(f"Уже установлено ({prefix}): {cleaned_line}")
+                        self._update_ui(
+                            f"{prefix} [УЖЕ УСТАНОВЛЕНО]: {cleaned_line}",
+                            None,
+                            log_widget,
+                            progress_bar,
+                        )
+                        continue
+
+                    # 2. Проверка на кастомные ошибки (например, 404 от choco)
                     if compiled_errors and any(
                         p.search(cleaned_line) for p in compiled_errors
                     ):
@@ -129,7 +151,7 @@ class InstallEngine:
                         )
                         continue
 
-                    # Парсинг прогресса
+                    # 3. Парсинг прогресса
                     m = progress_re.search(cleaned_line)
                     if m:
                         try:
@@ -144,7 +166,7 @@ class InstallEngine:
                         except ValueError:
                             pass
 
-                    # Обычный вывод
+                    # 4. Обычный вывод
                     self._update_ui(
                         f"{prefix}: {cleaned_line}", None, log_widget, progress_bar
                     )
@@ -188,6 +210,10 @@ class InstallEngine:
                     f"Пакет {package_label} вернул 0, но были ошибки в логах. Код изменен на -404."
                 )
                 rc = -404
+            # Если процесс вернул 0, и мы поняли, что пакет уже стоял
+            elif is_already_installed and rc in (0, None):
+                logger.info(f"Пакет {package_label} уже установлен. Код изменен на -2.")
+                rc = -2  # <--- Специальный код для "Уже установлено"
 
             rc_display = rc if rc is not None else -1
             if rc_display >= 2**31:
