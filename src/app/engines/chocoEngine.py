@@ -65,7 +65,6 @@ def choco_install(
 
     engine = InstallEngine(timeout=120)
 
-    # Паттерны для отлова ошибок 404 от Choco
     error_pats = [
         r"404\s+Not\s+Found",
         r"remote file either doesn't exist",
@@ -73,13 +72,16 @@ def choco_install(
         r"The remote server returned an error",
     ]
 
-    # Паттерн для определения, что пакет уже установлен (ДОБАВЛЕНО)
-    already_pats = [r"already installed"]
+    # Если включен --force, мы НЕ ищем фразу "already installed"
+    if "--force" in choco_args_list:
+        already_pats = []
+    else:
+        already_pats = [r"already installed"]
 
     def worker():
         total = len(packages_list)
         choco_thread.failed_packages = []
-        choco_thread.already_installed = []  # <--- Сохраняем список "уже установленных"
+        choco_thread.already_installed = []
 
         if total == 0:
             return
@@ -119,12 +121,12 @@ def choco_install(
                 package_total=total,
                 progress_regex=r"(\d+)\s*%",
                 error_patterns=error_pats,
-                already_installed_patterns=already_pats,  # <--- Передаем паттерн
+                already_installed_patterns=already_pats,
             )
 
             if rc in (0, 3010):
                 success_count += 1
-            elif rc == -2:  # <--- Обрабатываем код "Уже установлено"
+            elif rc == -2:
                 already_count += 1
                 choco_thread.already_installed.append(package)
             else:

@@ -8,6 +8,7 @@ from utils.logging import logger
 from frontend.ui_config import (
     BG_PANEL,
     FG_MUTED,
+    FG_TEXT,
     ACCENT,
     SUCCESS,
     WARNING,
@@ -35,6 +36,11 @@ class TaskManager:
         download_url=None,
         force=False,
     ):
+        # Удаляем старые записи для этой же программы, чтобы не было дублей
+        for widget in self.list_frame.winfo_children():
+            if isinstance(widget, tk.Label) and app_name in widget.cget("text"):
+                widget.destroy()
+
         lbl = tk.Label(
             self.list_frame,
             text=f"⏸ {app_name} — Ожидание",
@@ -70,12 +76,21 @@ class TaskManager:
                 lbl,
             ) = self.queue.get()
 
+            # Сбрасываем статус-бар при старте новой задачи (чтобы старые цвета уходили)
             self.root.after(
                 0,
-                lambda l=lbl, n=app_name: l.config(
-                    text=f"⚙️ {n} — Установка...", fg=ACCENT
+                lambda n=app_name: self.status_label.config(
+                    text=f"Установка {n}...", fg=FG_TEXT
                 ),
             )
+
+            if lbl.winfo_exists():
+                self.root.after(
+                    0,
+                    lambda l=lbl, n=app_name: l.config(
+                        text=f"⚙️ {n} — Установка...", fg=ACCENT
+                    ),
+                )
 
             try:
                 if download_url:
@@ -116,15 +131,16 @@ class TaskManager:
                 already = getattr(thread, "already_installed", [])
 
                 if download_url or not failed:
-                    if already:
-                        # 1. Желтая плашка в очереди
-                        self.root.after(
-                            0,
-                            lambda l=lbl, n=app_name: l.config(
-                                text=f"⚠️ {n} — Уже установлено", fg=WARNING
-                            ),
-                        )
-                        # 2. Подсказка в нижний лог
+                    if already and not force:
+                        # Если пакет уже стоял (Желтый)
+                        if lbl.winfo_exists():
+                            self.root.after(
+                                0,
+                                lambda l=lbl, n=app_name: l.config(
+                                    text=f"⚠️ {n} — Уже установлено", fg=WARNING
+                                ),
+                            )
+
                         hint_text = f"[!] '{app_name}' уже установлен. Если хотите переустановить, отметьте флажок 'Принудительно'."
                         self.root.after(
                             0,
@@ -133,26 +149,44 @@ class TaskManager:
                             ),
                         )
                     else:
+                        # Если успешно установлен (Зеленый)
+                        if lbl.winfo_exists():
+                            self.root.after(
+                                0,
+                                lambda l=lbl, n=app_name: l.config(
+                                    text=f"✅ {n} — Готово", fg=SUCCESS
+                                ),
+                            )
+                        # Убрали дублирование статус-бара, движок сам напишет "Готово. Установлено: 1..."
+                else:
+                    # Ошибка (Красный)
+                    if lbl.winfo_exists():
                         self.root.after(
                             0,
                             lambda l=lbl, n=app_name: l.config(
-                                text=f"✅ {n} — Готово", fg=SUCCESS
+                                text=f"❌ {n} — Ошибка", fg=DANGER
                             ),
                         )
-                else:
+                    self.root.after(
+                        0,
+                        lambda: self.status_label.config(
+                            text="Ошибка установки. Проверьте лог.", fg=DANGER
+                        ),
+                    )
+
+            except Exception as e:
+                logger.error(f"Ошибка в очереди: {e}")
+                if lbl.winfo_exists():
                     self.root.after(
                         0,
                         lambda l=lbl, n=app_name: l.config(
                             text=f"❌ {n} — Ошибка", fg=DANGER
                         ),
                     )
-
-            except Exception as e:
-                logger.error(f"Ошибка в очереди: {e}")
                 self.root.after(
                     0,
-                    lambda l=lbl, n=app_name: l.config(
-                        text=f"❌ {n} — Ошибка", fg=DANGER
+                    lambda: self.status_label.config(
+                        text="Критическая ошибка.", fg=DANGER
                     ),
                 )
 
