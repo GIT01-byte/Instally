@@ -69,26 +69,31 @@ run_builder() {
         "$TARGET" "$ARCH" "$IMPORTS"
     printf "[\e[33m ! \e[0m] \e[33mNote: Building may take several minutes depending on the architecture.\e[0m\n\n"
 
-    docker run --rm --privileged multiarch/qemu-user-static --reset -p yes > /dev/null 2>&1
+    # Безопасная настройка QEMU (вместо --privileged)
+    docker run --rm tonistiigi/binfmt --install all > /dev/null 2>&1
 
     TARGET_FILE=$(basename "$TARGET")
     ELF_FILE="${TARGET_FILE%.py}"
     
     echo "[$(timestamp)] Preparing Docker environment..."
     
-    docker run --platform "$1" --rm -t -v "$(pwd):/root/" "$2" /bin/bash -c "
+    # ВАЖНО: Убран флаг -t (он ломает вывод в Git Bash) и убран /dev/null для отслеживания ошибок
+    docker run --platform "$1" --rm \
+        -v "$(pwd):/root/" \
+        -w "/root" \
+        "$2" /bin/bash -c "
     echo '[$(date +%H:%M:%S)] Updating apt...'; \
     apt-get update -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 > /dev/null 2>&1; \
     echo '[$(date +%H:%M:%S)] Installing system dependencies...'; \
-    apt-get install -y gcc zlib1g-dev > /dev/null 2>&1; \
+    apt-get install -y gcc zlib1g-dev tk-dev > /dev/null 2>&1; \
     echo '[$(date +%H:%M:%S)] Upgrading pip...'; \
     pip3 install --upgrade pip > /dev/null 2>&1; \
     echo '[$(date +%H:%M:%S)] Installing PyInstaller and dependencies...'; \
-    pip3 install pyinstaller==6.11.1 $IMPORTS > /dev/null 2>&1; \
+    pip3 install pyinstaller==6.11.1 $IMPORTS; \
     echo '[$(date +%H:%M:%S)] Compiling with PyInstaller...'; \
-    pyinstaller /root/$TARGET --distpath /root/ --onefile --clean $HIDDEN_IMPORTS > /dev/null 2>&1; \
+    pyinstaller ./$TARGET --distpath ./ --onefile --clean $HIDDEN_IMPORTS; \
     echo '[$(date +%H:%M:%S)] Build process completed.'; \
-    mv /root/$ELF_FILE /root/${ELF_FILE}-$ARCH 2>&1"
+    mv ./$ELF_FILE ./${ELF_FILE}-$ARCH 2>&1"
 
     if [ $? -ne 0 ]; then
         echo -e "\n[\e[31mERROR\e[0m] Build failed for $ARCH"
@@ -100,14 +105,14 @@ run_builder() {
 }
 
 case $ARCH in
-    "x86_64")   run_builder "linux/amd64"   "python:3.12" ;;
-    "i386")     run_builder "linux/386"     "i386/python:3.12" ;;
-    "armv7l")   run_builder "linux/arm/v7"  "arm32v7/python:3.12" ;;
-    "armv8l"|"aarch64") run_builder "linux/arm64" "arm64v8/python:3.12" ;;
-    "ppc64le")  run_builder "linux/ppc64le" "ppc64le/python:3.12" ;;
-    "s390x")    run_builder "linux/s390x"   "s390x/python:3.12" ;;
-    "mips64")   run_builder "linux/mips64le" "debian:trixie" ;;
-    "riscv64")  run_builder "linux/riscv64" "debian:trixie" ;; 
+    "x86_64")   run_builder "linux/amd64"   "python:3.12-bullseye" ;;
+    "i386")     run_builder "linux/386"     "i386/python:3.12-bullseye" ;;
+    "armv7l")   run_builder "linux/arm/v7"  "arm32v7/python:3.12-bullseye" ;;
+    "armv8l"|"aarch64") run_builder "linux/arm64" "arm64v8/python:3.12-bullseye" ;;
+    "ppc64le")  run_builder "linux/ppc64le" "ppc64le/python:3.12-bullseye" ;;
+    "s390x")    run_builder "linux/s390x"   "s390x/python:3.12-bullseye" ;;
+    "mips64")   run_builder "linux/mips64le" "debian:bullseye" ;;
+    "riscv64")  run_builder "linux/riscv64" "debian:bullseye" ;; 
     *)
         echo "Error: Unknown architecture '$ARCH'"
         list

@@ -56,6 +56,7 @@ def choco_install(
     packages: Optional[List[str]] = None,
     choco_args: Optional[List[str]] = None,
     thread_name: str = "ChocoWorker",
+    cancel_event: threading.Event = None,
 ) -> threading.Thread:
 
     packages_list = list(packages) if packages else []
@@ -72,7 +73,6 @@ def choco_install(
         r"The remote server returned an error",
     ]
 
-    # Если включен --force, мы НЕ ищем фразу "already installed"
     if "--force" in choco_args_list:
         already_pats = []
     else:
@@ -122,6 +122,7 @@ def choco_install(
                 progress_regex=r"(\d+)\s*%",
                 error_patterns=error_pats,
                 already_installed_patterns=already_pats,
+                cancel_event=cancel_event,
             )
 
             if rc in (0, 3010):

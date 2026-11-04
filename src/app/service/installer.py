@@ -1,10 +1,3 @@
-"""
-Фасад для установки пакетов на разных ОС.
-На Windows — choco -> при неудаче -> winget.
-На Linux (Debian/Ubuntu) — apt -> при неудаче -> snap.
-На Linux (RedOS/RHEL/Fedora) — dnf.
-"""
-
 import platform
 import threading
 import shutil
@@ -14,10 +7,8 @@ from typing import List, Optional
 
 def _detect_engine() -> str:
     system = platform.system().lower()
-
     if system == "windows":
         return "choco"
-
     if system == "linux":
         distro_id = ""
         try:
@@ -28,7 +19,6 @@ def _detect_engine() -> str:
                         break
         except FileNotFoundError:
             pass
-
         if distro_id in ("redos", "rhel", "centos", "fedora", "rocky", "almalinux"):
             return "dnf"
         if distro_id in ("debian", "ubuntu", "linuxmint", "pop", "kali"):
@@ -39,7 +29,6 @@ def _detect_engine() -> str:
             return "apt"
         if shutil.which("snap"):
             return "snap"
-
     return "unknown"
 
 
@@ -51,20 +40,17 @@ def install(
     args: Optional[List[str]] = None,
     winget_mapping: Optional[dict] = None,
     snap_mapping: Optional[dict] = None,
+    cancel_event: threading.Event = None,
 ) -> threading.Thread:
 
     engine = _detect_engine()
-    logger_msg = f"[Installer] Выбран движок: {engine}"
     try:
         from utils.logging import logger
 
-        logger.info(logger_msg)
+        logger.info(f"[Installer] Выбран движок: {engine}")
     except Exception:
-        print(logger_msg)
+        print(f"[Installer] Выбран движок: {engine}")
 
-    # =========================================================
-    # WINDOWS: CHOCO -> WINGET
-    # =========================================================
     if engine == "choco":
         from engines.chocoEngine import choco_install
         from engines.wingetEngine import winget_install
@@ -72,34 +58,30 @@ def install(
         def chain_worker():
             current_thread = threading.current_thread()
             current_thread.failed_packages = []
-            current_thread.already_installed = []  # <--- Инициализация
+            current_thread.already_installed = []
 
             pkgs = list(packages) if packages else []
             if not pkgs:
                 return
 
-            # 1. Запускаем Choco
             choco_thread = choco_install(
                 action=action,
                 ttk_log_widget=ttk_log_widget,
                 ttk_progress_bar=ttk_progress_bar,
                 packages=pkgs,
                 choco_args=args,
+                cancel_event=cancel_event,
             )
             if hasattr(choco_thread, "join"):
                 choco_thread.join()
 
-            # 2. Забираем результаты из Choco
             failed = getattr(choco_thread, "failed_packages", [])
             already = getattr(choco_thread, "already_installed", [])
+            current_thread.already_installed = already
 
-            # 3. Сохраняем "уже установленные" в наш поток (чтобы UI их увидел)
-            current_thread.already_installed = already  # <--- ИСПРАВЛЕНИЕ
+            if not failed or (cancel_event and cancel_event.is_set()):
+                return
 
-            if not failed:
-                return  # Если нет ошибок, завершаем
-
-            # 4. Формируем список для Winget
             winget_pkgs = []
             for p in failed:
                 if winget_mapping and p in winget_mapping and winget_mapping[p]:
@@ -111,12 +93,12 @@ def install(
                 0, lambda: ttk_log_widget.config(text="[Choco упал] Запуск Winget...")
             )
 
-            # 5. Запускаем Winget
             winget_thread = winget_install(
                 action="install",
                 ttk_log_widget=ttk_log_widget,
                 ttk_progress_bar=ttk_progress_bar,
                 packages=winget_pkgs,
+                cancel_event=cancel_event,
             )
             if hasattr(winget_thread, "join"):
                 winget_thread.join()
@@ -131,9 +113,6 @@ def install(
         chain_thread.start()
         return chain_thread
 
-    # =========================================================
-    # LINUX (DEBIAN/UBUNTU): APT -> SNAP
-    # =========================================================
     if engine == "apt":
         from engines.aptEngine import apt_install
         from engines.snapEngine import snap_install
@@ -141,7 +120,7 @@ def install(
         def apt_chain_worker():
             current_thread = threading.current_thread()
             current_thread.failed_packages = []
-            current_thread.already_installed = []  # <--- Инициализация
+            current_thread.already_installed = []
 
             pkgs = list(packages) if packages else []
             if not pkgs:
@@ -153,28 +132,28 @@ def install(
                 ttk_progress_bar=ttk_progress_bar,
                 packages=pkgs,
                 apt_args=args,
+                cancel_event=cancel_event,
             )
             if hasattr(apt_thread, "join"):
                 apt_thread.join()
 
             failed = getattr(apt_thread, "failed_packages", [])
             already = getattr(apt_thread, "already_installed", [])
+            current_thread.already_installed = already
 
-            current_thread.already_installed = already  # <--- ИСПРАВЛЕНИЕ
-
-            if not failed:
+            if not failed or (cancel_event and cancel_event.is_set()):
                 return
 
             snap_pkgs = []
             for p in failed:
                 if snap_mapping and p in snap_mapping:
-                    snap_pkg_data = snap_mapping[p]
-                    if isinstance(snap_pkg_data, tuple):
-                        snap_name, is_classic = snap_pkg_data
+                    data = snap_mapping[p]
+                    if isinstance(data, tuple):
+                        snap_name, is_classic = data
                         if snap_name:
                             snap_pkgs.append((snap_name, is_classic))
-                    elif isinstance(snap_pkg_data, str) and snap_pkg_data:
-                        snap_pkgs.append((snap_pkg_data, False))
+                    elif isinstance(data, str) and data:
+                        snap_pkgs.append((data, False))
                 else:
                     snap_pkgs.append((p, False))
 
@@ -190,6 +169,7 @@ def install(
                 ttk_log_widget=ttk_log_widget,
                 ttk_progress_bar=ttk_progress_bar,
                 packages=snap_pkgs,
+                cancel_event=cancel_event,
             )
             if hasattr(snap_thread, "join"):
                 snap_thread.join()
@@ -202,9 +182,6 @@ def install(
         chain_thread.start()
         return chain_thread
 
-    # =========================================================
-    # LINUX: ЧИСТЫЙ SNAP
-    # =========================================================
     if engine == "snap":
         from engines.snapEngine import snap_install
 
@@ -226,11 +203,9 @@ def install(
             ttk_progress_bar=ttk_progress_bar,
             packages=snap_pkgs,
             snap_args=args,
+            cancel_event=cancel_event,
         )
 
-    # =========================================================
-    # LINUX: DNF
-    # =========================================================
     if engine == "dnf":
         from engines.dnfEngine import dnf_install
 
@@ -240,11 +215,9 @@ def install(
             ttk_progress_bar=ttk_progress_bar,
             packages=packages,
             dnf_args=args,
+            cancel_event=cancel_event,
         )
 
-    # =========================================================
-    # UNKNOWN
-    # =========================================================
     ttk_log_widget.after(0, lambda: ttk_log_widget.config(text="ОС не поддерживается"))
     dummy_thread = threading.Thread(target=lambda: None, daemon=True)
     dummy_thread.failed_packages = packages or []

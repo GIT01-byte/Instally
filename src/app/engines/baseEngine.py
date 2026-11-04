@@ -7,7 +7,7 @@ import re
 import time
 import queue
 from tkinter import Label, ttk
-from typing import List, Optional, Dict
+from typing import List, Dict
 
 from utils.logging import logger
 
@@ -51,17 +51,16 @@ class InstallEngine:
         package_total: int = 1,
         progress_regex: str = r"(\d+)\s*%",
         error_patterns: List[str] = None,
-        already_installed_patterns: List[str] = None,  # <--- ДОБАВЛЕНО
+        already_installed_patterns: List[str] = None,
         env: Dict[str, str] = None,
+        cancel_event: threading.Event = None,
     ) -> int:
-        """Запускает процесс, парсит вывод и возвращает код возврата."""
         prefix = f"[{package_index}/{package_total}] {package_label}".strip()
         logger.info(f"Запуск ({prefix}): {' '.join(cmd)}")
         self._update_ui(f"{prefix}: Запуск...", None, log_widget, progress_bar)
 
         try:
             CREATE_NO_WINDOW = 0x08000000 if sys.platform == "win32" else 0
-
             process = subprocess.Popen(
                 cmd,
                 stdout=subprocess.PIPE,
@@ -103,11 +102,24 @@ class InstallEngine:
 
             last_activity = time.time()
             has_custom_error = False
-            is_already_installed = False  # <--- Флаг "Уже установлено"
+            is_already_installed = False
 
             while True:
+                # Проверка на отмену
+                if cancel_event and cancel_event.is_set():
+                    logger.warning(
+                        f"Задача отменена пользователем. Убиваем процесс {prefix}."
+                    )
+                    try:
+                        process.kill()
+                        process.wait(timeout=3)
+                        if process.stdout:
+                            process.stdout.close()
+                    except Exception:
+                        pass
+                    return -1
+
                 try:
-                    # Ждем строку с таймаутом 1 сек (чтобы проверять общий таймаут)
                     line = output_queue.get(timeout=1.0)
                     last_activity = time.time()
 
@@ -115,7 +127,6 @@ class InstallEngine:
                     if not cleaned_line:
                         continue
 
-                    # Очистка от мусорных символов прогресс-баров (winget/snap)
                     if "winget" in cmd[0].lower() or "snap" in cmd[0].lower():
                         cleaned_line = re.sub(
                             r"[█▓▒░\\|/\-]+", "", cleaned_line
@@ -123,12 +134,10 @@ class InstallEngine:
                         if not cleaned_line:
                             continue
 
-                    # 1. Проверка "Уже установлено" (ДОБАВЛЕНО)
                     if compiled_already and any(
                         p.search(cleaned_line) for p in compiled_already
                     ):
                         is_already_installed = True
-                        logger.info(f"Уже установлено ({prefix}): {cleaned_line}")
                         self._update_ui(
                             f"{prefix} [УЖЕ УСТАНОВЛЕНО]: {cleaned_line}",
                             None,
@@ -137,12 +146,10 @@ class InstallEngine:
                         )
                         continue
 
-                    # 2. Проверка на кастомные ошибки (например, 404 от choco)
                     if compiled_errors and any(
                         p.search(cleaned_line) for p in compiled_errors
                     ):
                         has_custom_error = True
-                        logger.error(f"Ошибка загрузки ({prefix}): {cleaned_line}")
                         self._update_ui(
                             f"{prefix} [ОШИБКА]: {cleaned_line}",
                             None,
@@ -151,7 +158,6 @@ class InstallEngine:
                         )
                         continue
 
-                    # 3. Парсинг прогресса
                     m = progress_re.search(cleaned_line)
                     if m:
                         try:
@@ -166,14 +172,11 @@ class InstallEngine:
                         except ValueError:
                             pass
 
-                    # 4. Обычный вывод
                     self._update_ui(
                         f"{prefix}: {cleaned_line}", None, log_widget, progress_bar
                     )
-                    logger.info(f"Вывод ({prefix}): {cleaned_line}")
 
                 except queue.Empty:
-                    # Процесс завершился и вывод закончился
                     if (
                         process.poll() is not None
                         and not t_reader.is_alive()
@@ -181,16 +184,12 @@ class InstallEngine:
                     ):
                         break
 
-                    # ПРОВЕРКА ТАЙМАУТА (120 секунд)
                     if time.time() - last_activity > self.timeout:
                         logger.error(
                             f"Таймаут бездействия ({self.timeout} сек). Убиваем {prefix}."
                         )
                         self._update_ui(
-                            f"{prefix}: ТАЙМАУТ. Прерывание...",
-                            None,
-                            log_widget,
-                            progress_bar,
+                            f"{prefix}: ТАЙМАУТ...", None, log_widget, progress_bar
                         )
                         try:
                             process.kill()
@@ -204,30 +203,13 @@ class InstallEngine:
             process.wait()
             rc = process.returncode
 
-            # Если процесс вернул 0, но были ошибки в тексте
             if has_custom_error and rc in (0, None):
-                logger.warning(
-                    f"Пакет {package_label} вернул 0, но были ошибки в логах. Код изменен на -404."
-                )
                 rc = -404
-            # Если процесс вернул 0, и мы поняли, что пакет уже стоял
             elif is_already_installed and rc in (0, None):
-                logger.info(f"Пакет {package_label} уже установлен. Код изменен на -2.")
-                rc = -2  # <--- Специальный код для "Уже установлено"
+                rc = -2
 
-            rc_display = rc if rc is not None else -1
-            if rc_display >= 2**31:
-                rc_display -= 2**32
-
-            logger.info(f"Процесс завершил работу с кодом: {rc_display} ({prefix})")
             return rc if rc is not None else -1
 
         except Exception as e:
             logger.critical(f"Ошибка процесса {prefix}: {e}\n{traceback.format_exc()}")
-            self._update_ui(
-                f"Критическая ошибка на пакете {package_label}",
-                None,
-                log_widget,
-                progress_bar,
-            )
             return -1

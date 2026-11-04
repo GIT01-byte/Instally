@@ -1,7 +1,12 @@
 import os
 import sys
-import shutil
+import subprocess
 import threading
+import shutil
+import traceback
+import re
+import time
+import queue
 from tkinter import Label, ttk
 from typing import List, Optional
 
@@ -28,7 +33,9 @@ def winget_install(
     packages: Optional[List[str]] = None,
     winget_args: Optional[List[str]] = None,
     thread_name: str = "WingetWorker",
+    cancel_event: threading.Event = None,
 ) -> threading.Thread:
+
     packages_list = list(packages) if packages else []
     default_args = [
         "--silent",
@@ -45,18 +52,18 @@ def winget_install(
         if total == 0:
             return
 
+        winget_exe = _find_winget()
+        if not winget_exe:
+            logger.error("winget.exe не найден.")
+            winget_thread.failed_packages = packages_list
+            return
+
         try:
             ttk_progress_bar.after(
                 0, lambda: ttk_progress_bar.configure(maximum=max(total, 1), value=0)
             )
         except Exception:
             pass
-
-        winget_exe = _find_winget()
-        if not winget_exe:
-            logger.error("winget.exe не найден.")
-            winget_thread.failed_packages = packages_list
-            return
 
         success_count = 0
         fail_count = 0
@@ -71,7 +78,7 @@ def winget_install(
                 package_label=package,
                 package_index=i,
                 package_total=total,
-                progress_regex=r"(\d+)\s*%",
+                cancel_event=cancel_event,
             )
 
             if rc in (0, 3010):
@@ -79,7 +86,6 @@ def winget_install(
             else:
                 fail_count += 1
                 winget_thread.failed_packages.append(package)
-                logger.warning(f"Пакет '{package}' не установлен. Код: {rc}")
 
             ttk_progress_bar.after(0, lambda i=i: ttk_progress_bar.config(value=i))
 

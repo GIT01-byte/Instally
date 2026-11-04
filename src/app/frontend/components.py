@@ -6,7 +6,6 @@ from frontend.ui_config import (
     BG_CARD_HOVER,
     BORDER,
     ACCENT,
-    ACCENT_DARK,
     FG_TITLE,
     FG_MUTED,
     FG_DIM,
@@ -40,10 +39,23 @@ def make_scrollable(parent: tk.Widget) -> tk.Frame:
     canvas.bind(
         "<Configure>", lambda event: canvas.itemconfigure(window_id, width=event.width)
     )
-    canvas.bind_all(
-        "<MouseWheel>",
-        lambda event: canvas.yview_scroll(int(-1 * (event.delta / 120)), "units"),
-    )
+
+    # Умный скролл: проверяем, находится ли курсор над этим Canvas
+    def _on_mousewheel(event):
+        x, y = canvas.winfo_pointerxy()
+        canvas_x = canvas.winfo_rootx()
+        canvas_y = canvas.winfo_rooty()
+        canvas_w = canvas.winfo_width()
+        canvas_h = canvas.winfo_height()
+
+        if (
+            canvas_x <= x <= canvas_x + canvas_w
+            and canvas_y <= y <= canvas_y + canvas_h
+        ):
+            canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+    # Привязываем ко всему приложению, но скролить будет только та область, над которой курсор
+    canvas.bind_all("<MouseWheel>", _on_mousewheel)
     return inner
 
 
@@ -61,14 +73,7 @@ def make_card(
     task_manager,
     force_var,
 ):
-    card = tk.Frame(
-        parent,
-        bg=BG_CARD,
-        padx=PAD_CARD_X,
-        pady=PAD_CARD_Y,
-        highlightbackground=BORDER,
-        highlightthickness=1,
-    )
+    card = tk.Frame(parent, bg=BG_CARD, padx=PAD_CARD_X, pady=PAD_CARD_Y)
     card.grid(
         row=row, column=col, padx=PAD_CARD_GRID, pady=PAD_CARD_GRID, sticky="nsew"
     )
@@ -91,7 +96,6 @@ def make_card(
     ).pack(fill="x", pady=(8, 16))
 
     btn_text = "Скачать ZIP" if download_url else "Установить"
-
     btn = ttk.Button(
         card,
         text=btn_text,
@@ -103,14 +107,14 @@ def make_card(
     btn.pack(fill="x", side="bottom")
 
     def on_enter(_):
-        card.configure(bg=BG_CARD_HOVER, highlightbackground=ACCENT_DARK)
+        card.configure(bg=BG_CARD_HOVER)
         header.configure(bg=BG_CARD_HOVER)
         for w in card.winfo_children():
             if isinstance(w, tk.Label):
                 w.configure(bg=BG_CARD_HOVER)
 
     def on_leave(_):
-        card.configure(bg=BG_CARD, highlightbackground=BORDER)
+        card.configure(bg=BG_CARD)
         header.configure(bg=BG_CARD)
         for w in card.winfo_children():
             if isinstance(w, tk.Label):

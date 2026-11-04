@@ -3,11 +3,11 @@ from tkinter import ttk
 # ==============================================================
 #                    ДИЗАЙН-СИСТЕМА (ЦВЕТА)
 # ==============================================================
-BG_ROOT = "#1e1f29"
-BG_PANEL = "#282a36"
-BG_CARD = "#2f313e"
-BG_CARD_HOVER = "#383a4a"
-BG_INPUT = "#21222c"
+BG_ROOT = "#282a36"  # Основной фон (чуть светлее)
+BG_PANEL = "#1e1f29"  # Панель задач (темнее, чтобы выделяться)
+BG_CARD = "#343746"  # Карточки (мягкий серо-фиолетовый)
+BG_CARD_HOVER = "#42455a"  # Ховер карточки
+BG_INPUT = "#1e1f29"
 
 FG_TITLE = "#f8f8f2"
 FG_TEXT = "#d7d7e0"
@@ -19,10 +19,10 @@ ACCENT_HOVER = "#caa9fa"
 ACCENT_DARK = "#8a5cf6"
 
 SUCCESS = "#50fa7b"
-WARNING = "#f1fa8c"  # <--- НОВЫЙ ЦВЕТ (Dracula Yellow)
+WARNING = "#f1fa8c"
 DANGER = "#ff5555"
 DANGER_HOVER = "#ff6e6e"
-BORDER = "#3a3c4a"
+BORDER = "#44475a"  # Мягкая рамка
 
 # ==============================================================
 #                    ДИЗАЙН-СИСТЕМА (ШРИФТЫ)
@@ -56,6 +56,8 @@ PAD_SECTION_Y = 20
 def setup_styles():
     style = ttk.Style()
     style.theme_use("clam")
+
+    # Вкладки (Notebook)
     style.configure(
         "TNotebook", background=BG_ROOT, borderwidth=0, tabmargins=(8, 6, 8, 0)
     )
@@ -74,13 +76,16 @@ def setup_styles():
         expand=[("selected", (0, 0, 0, 0))],
     )
 
+    # Базовые элементы
     style.configure("TFrame", background=BG_ROOT)
     style.configure(
         "TLabel", background=BG_ROOT, foreground=FG_TEXT, font=FONT_SECTION_COUNT
     )
+
+    # Обычные кнопки (Закрыть, Очистить)
     style.configure(
         "TButton",
-        background=BG_CARD,
+        background=BG_PANEL,
         foreground=FG_TEXT,
         borderwidth=0,
         focusthickness=0,
@@ -93,6 +98,7 @@ def setup_styles():
         foreground=[("active", FG_TITLE)],
     )
 
+    # Акцентные кнопки (Установить)
     style.configure(
         "Accent.TButton",
         background=ACCENT_DARK,
@@ -108,9 +114,10 @@ def setup_styles():
         foreground=[("active", "#ffffff")],
     )
 
+    # Кнопки опасных действий (Закрыть)
     style.configure(
         "Danger.TButton",
-        background=BG_CARD,
+        background=BG_PANEL,
         foreground=DANGER,
         borderwidth=0,
         focusthickness=0,
@@ -123,22 +130,25 @@ def setup_styles():
         foreground=[("active", DANGER_HOVER)],
     )
 
+    # Прогресс-бар
     style.configure(
         "Accent.Horizontal.TProgressbar",
-        troughcolor=BG_INPUT,
+        troughcolor=BG_PANEL,
         background=ACCENT,
-        bordercolor=BG_INPUT,
+        bordercolor=BG_PANEL,
         lightcolor=ACCENT,
         darkcolor=ACCENT,
-        thickness=8,
+        thickness=4,
     )
 
+    # СКРОЛЛБАР (Тонкий и аккуратный)
     style.configure(
         "Vertical.TScrollbar",
-        background=BG_PANEL,
+        background=BG_ROOT,
         troughcolor=BG_ROOT,
         bordercolor=BG_ROOT,
-        arrowcolor=FG_MUTED,
+        arrowcolor=BG_ROOT,  # Прячем стрелки
         gripcount=0,
-    )
-    style.map("Vertical.TScrollbar", background=[("active", BG_CARD_HOVER)])
+        width=8,
+    )  # Делаем тонким
+    style.map("Vertical.TScrollbar", background=[("active", BORDER)])
