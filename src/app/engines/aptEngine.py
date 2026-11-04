@@ -18,6 +18,7 @@ def apt_install(
     packages: Optional[List[str]] = None,
     apt_args: Optional[List[str]] = None,
     thread_name: str = "AptWorker",
+    cancel_event: threading.Event = None,  # <--- ДОБАВЛЕНО
 ) -> threading.Thread:
 
     packages_list = list(packages) if packages else []
@@ -35,7 +36,6 @@ def apt_install(
             ]
         )
 
-    # Окружение для тихой установки
     env = os.environ.copy()
     env["DEBIAN_FRONTEND"] = "noninteractive"
     env["LANG"] = "C.UTF-8"
@@ -46,6 +46,7 @@ def apt_install(
     def worker():
         total = len(packages_list)
         apt_thread.failed_packages = []
+        apt_thread.already_installed = []
 
         try:
             ttk_progress_bar.after(
@@ -57,7 +58,6 @@ def apt_install(
         if not packages_list:
             return
 
-        # Обновление индексов
         ttk_log_widget.after(0, lambda: ttk_log_widget.config(text="apt-get update..."))
         engine.run_process(
             [APT_EXE, "update"],
@@ -67,6 +67,7 @@ def apt_install(
             0,
             total,
             env=env,
+            cancel_event=cancel_event,  # <--- ДОБАВЛЕНО
         )
 
         success_count = 0
@@ -84,6 +85,7 @@ def apt_install(
                 package_total=total,
                 progress_regex=r"\[\s*(\d+)\s*%\]",
                 env=env,
+                cancel_event=cancel_event,  # <--- ДОБАВЛЕНО
             )
 
             if rc == 0:

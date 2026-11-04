@@ -105,11 +105,8 @@ class InstallEngine:
             is_already_installed = False
 
             while True:
-                # Проверка на отмену
                 if cancel_event and cancel_event.is_set():
-                    logger.warning(
-                        f"Задача отменена пользователем. Убиваем процесс {prefix}."
-                    )
+                    logger.warning(f"Задача отменена пользователем. Убиваем {prefix}.")
                     try:
                         process.kill()
                         process.wait(timeout=3)

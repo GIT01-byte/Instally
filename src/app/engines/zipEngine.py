@@ -22,7 +22,6 @@ def download_and_extract_zip(
         zip_path = downloads_dir / f"{app_name}.zip"
 
         try:
-            # 1. Создаем папку
             downloads_dir.mkdir(parents=True, exist_ok=True)
 
             ttk_log_widget.after(
@@ -32,7 +31,6 @@ def download_and_extract_zip(
                 0, lambda: ttk_progress_bar.configure(maximum=100, value=0)
             )
 
-            # 2. Скачивание
             def report_hook(block_num, block_size, total_size):
                 if cancel_event and cancel_event.is_set():
                     raise InterruptedError("Скачивание отменено пользователем.")
@@ -45,18 +43,15 @@ def download_and_extract_zip(
 
             urllib.request.urlretrieve(url, zip_path, reporthook=report_hook)
 
-            # Если отменили сразу после скачивания
             if cancel_event and cancel_event.is_set():
                 raise InterruptedError("Скачивание отменено пользователем.")
 
-            # 3. Распаковка
             ttk_log_widget.after(
                 0, lambda: ttk_log_widget.config(text="Распаковка архива...")
             )
             with zipfile.ZipFile(zip_path, "r") as zip_ref:
                 zip_ref.extractall(downloads_dir)
 
-            # 4. Завершение
             os.remove(zip_path)
             ttk_log_widget.after(
                 0, lambda: ttk_log_widget.config(text="Готово! Папка открыта.")
@@ -69,14 +64,11 @@ def download_and_extract_zip(
             else:
                 os.system(f'xdg-open "{downloads_dir}"')
 
-        # --- ОБРАБОТКА ОШИБОК ---
-
         except InterruptedError:
             logger.info(f"[ZIP] Скачивание '{app_name}' прервано пользователем.")
             ttk_log_widget.after(
                 0, lambda: ttk_log_widget.config(text="Отменено пользователем.")
             )
-            # Удаляем недокачанный файл
             if zip_path.exists():
                 try:
                     os.remove(zip_path)
@@ -90,9 +82,7 @@ def download_and_extract_zip(
             )
 
         except zipfile.BadZipFile:
-            logger.error(
-                f"[ZIP] Файл '{app_name}.zip' поврежден или не является ZIP-архивом."
-            )
+            logger.error(f"[ZIP] Файл '{app_name}.zip' поврежден.")
             ttk_log_widget.after(
                 0,
                 lambda: ttk_log_widget.config(text="Ошибка: скачанный файл поврежден."),

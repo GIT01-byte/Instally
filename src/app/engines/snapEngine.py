@@ -24,6 +24,7 @@ def snap_install(
     packages: Optional[List[Union[str, Tuple[str, bool]]]] = None,
     snap_args: Optional[List[str]] = None,
     thread_name: str = "SnapWorker",
+    cancel_event: threading.Event = None,  # <--- ДОБАВЛЕНО
 ) -> threading.Thread:
 
     normalized_packages = []
@@ -37,6 +38,7 @@ def snap_install(
     def worker():
         total = len(normalized_packages)
         snap_thread.failed_packages = []
+        snap_thread.already_installed = []
         if total == 0:
             return
 
@@ -70,6 +72,7 @@ def snap_install(
                 package_index=i,
                 package_total=total,
                 progress_regex=r"(\d+)\s*%",
+                cancel_event=cancel_event,  # <--- ДОБАВЛЕНО
             )
 
             if rc == 0:
@@ -77,7 +80,6 @@ def snap_install(
             else:
                 fail_count += 1
                 snap_thread.failed_packages.append(package_name)
-                logger.warning(f"Пакет '{package_name}' не установлен. Код: {rc}")
 
             ttk_progress_bar.after(0, lambda i=i: ttk_progress_bar.config(value=i))
 

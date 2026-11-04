@@ -16,6 +16,7 @@ def dnf_install(
     packages: Optional[List[str]] = None,
     dnf_args: Optional[List[str]] = None,
     thread_name: str = "DnfWorker",
+    cancel_event: threading.Event = None,  # <--- ДОБАВЛЕНО
 ) -> threading.Thread:
 
     packages_list = list(packages) if packages else []
@@ -32,6 +33,7 @@ def dnf_install(
     def worker():
         total = len(packages_list)
         dnf_thread.failed_packages = []
+        dnf_thread.already_installed = []
         if total == 0:
             return
 
@@ -57,6 +59,7 @@ def dnf_install(
                 package_total=total,
                 progress_regex=r"\[\s*(\d+)\s*%\]",
                 env=env,
+                cancel_event=cancel_event,  # <--- ДОБАВЛЕНО
             )
 
             if rc == 0:
