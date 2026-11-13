@@ -1,0 +1,51 @@
+name: Build Executables
+
+on: [push, workflow_dispatch]
+
+jobs:
+    build:
+        strategy:
+            matrix:
+                include:
+                    # --- СБОРКА ДЛЯ WINDOWS ---
+                    - os: windows-latest
+                      artifact_name: Instally-Windows
+                      # Добавили --name "Instally" и --add-data (для Windows разделитель ;)
+                      build_cmd: poetry run pyinstaller --onefile --noconsole --name "Instally" --icon=icon.ico --add-data "icon.ico;." ./src/app/main.py
+                      output_path: dist/Instally.exe
+
+                    # --- СБОРКА ДЛЯ MACOS ---
+                    - os: macos-latest
+                      artifact_name: Instally-macOS
+                      # На Mac разделитель : . Иконку (если есть) нужно конвертировать в .icns
+                      build_cmd: poetry run pyinstaller --windowed --name "Instally" --add-data "icon.ico:." ./src/app/main.py
+                      output_path: dist/Instally.app
+
+        runs-on: ${{ matrix.os }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Install Poetry
+              uses: snok/install-poetry@v1
+              with:
+                  virtualenvs-create: true
+                  virtualenvs-in-project: true
+
+            - name: Install dependencies
+              run: poetry install
+
+            - name: Build with PyInstaller
+              run: ${{ matrix.build_cmd }}
+
+            - name: Upload Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ${{ matrix.artifact_name }}
+                  path: ${{ matrix.output_path }}

@@ -1,6 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 import sys
+import os
+import threading
+import contextlib
+import io
 from data.catalog import CATALOG
 from frontend.ui_config import (
     BG_ROOT,
@@ -24,6 +28,14 @@ from frontend.ui_config import (
 )
 from frontend.components import make_scrollable, make_section
 from frontend.task_manager import TaskManager
+from frontend.rings_chart import ActivityRings
+
+
+def get_asset_path(filename):
+    """Возвращает правильный путь к ресурсам (для .exe и для исходников)."""
+    if getattr(sys, "frozen", False):
+        return os.path.join(sys._MEIPASS, "assets", filename)
+    return os.path.join(os.path.dirname(__file__), "assets", filename)
 
 
 class AppWindow:
@@ -38,6 +50,8 @@ class AppWindow:
         setup_styles()
         self.catalog_data = self._parse_catalog()
         self.force_reinstall_var = tk.BooleanVar(value=False)
+        self.service_menu_open = False
+
         self._build_ui()
 
     def _get_os(self):
@@ -108,6 +122,25 @@ class AppWindow:
             anchor="w",
         ).pack(anchor="w")
 
+        # --- НАСТРОЙКИ (ШЕСТЕРЕНКА) ---
+        self.gear_btn = tk.Label(
+            top_frame,
+            text="⚙",
+            font=("Segoe UI", 18),
+            bg=BG_ROOT,
+            fg=FG_MUTED,
+            cursor="hand2",
+        )
+        self.gear_btn.pack(side="right", padx=15, pady=8)
+        self.gear_btn.bind("<Button-1>", self._toggle_service_menu)
+
+        # Раскомментируй, если скачаешь иконку в src/app/assets/settings.png
+        # try:
+        #     self.gear_img = tk.PhotoImage(file=get_asset_path("settings.png")).subsample(2, 2)
+        #     self.gear_btn.config(image=self.gear_img, text="")
+        # except Exception as e:
+        #     print(f"Не удалось загрузить иконку: {e}")
+
         # Поиск
         self.search_frame = tk.Frame(
             top_frame,
@@ -122,7 +155,6 @@ class AppWindow:
 
         self.search_var = tk.StringVar()
         self.search_var.trace_add("write", self._on_search)
-
         self.search_entry = tk.Entry(
             self.search_frame,
             textvariable=self.search_var,
@@ -137,7 +169,6 @@ class AppWindow:
         self.search_entry.insert(0, "Поиск...")
         self.search_entry.bind("<FocusIn>", self._on_focus_in)
         self.search_entry.bind("<FocusOut>", self._on_focus_out)
-
         self.root.bind("<Button-1>", self._on_global_click)
 
         # Чекбокс
@@ -192,7 +223,6 @@ class AppWindow:
         queue_scroll = ttk.Scrollbar(
             queue_wrapper, orient="vertical", command=self.queue_canvas.yview
         )
-
         self.task_list_frame = tk.Frame(self.queue_canvas, bg=BG_PANEL)
         self.task_list_frame.bind(
             "<Configure>",
@@ -200,7 +230,6 @@ class AppWindow:
                 scrollregion=self.queue_canvas.bbox("all")
             ),
         )
-
         window_id = self.queue_canvas.create_window(
             (0, 0), window=self.task_list_frame, anchor="nw"
         )
@@ -209,22 +238,8 @@ class AppWindow:
             lambda e: self.queue_canvas.itemconfig(window_id, width=e.width),
         )
         self.queue_canvas.configure(yscrollcommand=queue_scroll.set)
-
         self.queue_canvas.pack(side="left", fill="both", expand=True)
         queue_scroll.pack(side="right", fill="y")
-
-        # Умный скролл для очереди
-        def _on_queue_mousewheel(event):
-            x, y = self.queue_canvas.winfo_pointerxy()
-            c_x = self.queue_canvas.winfo_rootx()
-            c_y = self.queue_canvas.winfo_rooty()
-            c_w = self.queue_canvas.winfo_width()
-            c_h = self.queue_canvas.winfo_height()
-
-            if c_x <= x <= c_x + c_w and c_y <= y <= c_y + c_h:
-                self.queue_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
-
-        self.queue_canvas.bind_all("<MouseWheel>", _on_queue_mousewheel)
 
         # Статус-бар
         status_container = tk.Frame(bottom_frame, bg=BG_PANEL)
@@ -262,8 +277,6 @@ class AppWindow:
         self._render_catalog(self.catalog_data)
 
         bottom_frame.pack(fill="x", side="bottom", pady=(0, 0))
-
-        # Кнопки внизу
         ttk.Button(
             bottom_frame,
             text="Закрыть",
@@ -277,13 +290,111 @@ class AppWindow:
             command=self._clear_logs,
         ).pack(side="right", padx=10, pady=(0, 14))
 
-        self.root.bind(
-            "<F11>",
-            lambda e: self.root.attributes(
-                "-fullscreen", not self.root.attributes("-fullscreen")
-            ),
+        # --- СЕРВИСНОЕ МЕНЮ ---
+        self.service_overlay = tk.Frame(self.root, bg=BG_PANEL)
+        self._build_service_menu()
+
+    def _build_service_menu(self):
+        header = tk.Frame(self.service_overlay, bg=BG_PANEL, pady=20)
+        header.pack(fill="x")
+        tk.Label(
+            header, text="Сервисное меню", font=FONT_TITLE, bg=BG_PANEL, fg=FG_TITLE
+        ).pack()
+
+        close_btn = tk.Label(
+            header,
+            text="✖",
+            font=("Segoe UI", 16),
+            bg=BG_PANEL,
+            fg=FG_MUTED,
+            cursor="hand2",
         )
-        self.root.bind("<Escape>", lambda e: self.root.attributes("-fullscreen", False))
+        close_btn.place(relx=0.95, rely=0.5, anchor="e")
+        close_btn.bind("<Button-1>", self._toggle_service_menu)
+
+        self.test_btn = ttk.Button(
+            self.service_overlay,
+            text="Запустить тест программ",
+            style="Accent.TButton",
+            command=self._run_test,
+        )
+        self.test_btn.pack(pady=20)
+
+        self.rings_frame = tk.Frame(self.service_overlay, bg=BG_PANEL)
+        self.rings_frame.pack(fill="both", expand=True, pady=10)
+
+        self.rings_chart = ActivityRings(
+            self.rings_frame, width=300, height=300, bg=BG_PANEL
+        )
+        self.rings_chart.pack(expand=True)
+
+        self.test_result_label = tk.Label(
+            self.rings_frame,
+            text="Нажмите кнопку для проверки",
+            font=FONT_STATUS,
+            bg=BG_PANEL,
+            fg=FG_MUTED,
+        )
+        self.test_result_label.pack(pady=10)
+
+    def _toggle_service_menu(self, event=None):
+        if self.service_menu_open:
+            self.service_overlay.pack_forget()
+            self.service_menu_open = False
+        else:
+            self.service_overlay.pack(fill="both", expand=True)
+            self.service_menu_open = True
+
+    def _run_test(self):
+        self.test_btn.config(state="disabled", text="Тестирование...")
+        self.test_result_label.config(text="Проверяем пакеты, подождите...", fg=ACCENT)
+        threading.Thread(target=self._test_thread, daemon=True).start()
+
+    def _test_thread(self):
+        output = io.StringIO()
+        try:
+            # 1. Вычисляем правильный путь к корню проекта (папка src)
+            # window.py находится в src/app/frontend/, значит корень на 2 уровня выше
+            root_dir = os.path.abspath(
+                os.path.join(os.path.dirname(__file__), "..", "..")
+            )
+            if root_dir not in sys.path:
+                sys.path.insert(0, root_dir)
+
+            with contextlib.redirect_stdout(output):
+                # 2. Импортируем из правильного файла (как на скриншоте)
+                from tests.test_programm_founds import test_packages_exist
+
+                # Перехватываем sys.exit, если он там есть
+                try:
+                    test_packages_exist()
+                except SystemExit:
+                    pass
+        except Exception as e:
+            print(f"Ошибка импорта или запуска теста: {e}")
+
+        result_text = output.getvalue()
+        self.root.after(0, lambda: self._show_test_results(result_text))
+
+    def _show_test_results(self, text):
+        self.test_btn.config(state="normal", text="Запустить тест программ")
+
+        total = text.count("Проверка:")
+        errors = text.count("❌ НЕ НАЙДЕН")
+        warnings = text.count("⚠️ Найден только в")
+        ok = total - errors - warnings
+
+        if total == 0:
+            self.test_result_label.config(
+                text="Не удалось получить результаты (см. лог)", fg=BG_ROOT
+            )
+            return
+
+        self.rings_chart.draw(ok, warnings, errors)
+        self.test_result_label.config(
+            text=f"Всего: {total} | OK: {ok} | Fallback: {warnings} | Ошибки: {errors}",
+            fg=FG_TEXT,
+        )
 
     def _on_global_click(self, event):
         if event.widget != self.search_entry:
@@ -332,13 +443,10 @@ class AppWindow:
     def _on_search(self, *args):
         if not hasattr(self, "market_frame"):
             return
-
         text = self.search_var.get()
-
         if not text.strip() or text == "Поиск...":
             self._render_catalog(self.catalog_data)
             return
-
         query = text.lower().strip()
         filtered_data = {}
         for cat, apps in self.catalog_data.items():
@@ -348,5 +456,4 @@ class AppWindow:
                     if cat not in filtered_data:
                         filtered_data[cat] = []
                     filtered_data[cat].append(app)
-
         self._render_catalog(filtered_data)
